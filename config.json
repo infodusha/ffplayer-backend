@@ -1,0 +1,30 @@
+{
+  "auth": {
+    "key": "../ssl/cert.key",
+    "saltRounds": 10
+  },
+  "apollo": {
+    "playground": true,
+    "debug": true,
+    "cors": {
+      "origin": "*",
+      "methods": ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      "allowedHeaders": ["Content-Type", "Authorization"],
+      "preflightContinue": false,
+      "optionsSuccessStatus": 204
+    },
+    "server": {
+      "port": 8080,
+      "host": "localhost"
+    }
+  },
+  "logger": {
+    "level": "info",
+    "console": true
+  },
+  "mail": {
+    "host": "smtp.yandex.ru",
+    "port": 465,
+    "secure": true
+  }
+}
