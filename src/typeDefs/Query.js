@@ -1,9 +1,11 @@
 import apollo from 'apollo-server-express';
-const {gql} = apollo;
 
-export default gql`
+export default apollo.gql`
   type Query {
-    getTrainers(rank: Rank, streamer: Boolean): [Trainer]
-    getToken(code: String!): String @auth(required: false)
+    """
+      Get filtered trainers list
+    """
+    trainers(rank: Rank, streamer: Boolean, game: Game): [Trainer]
+    token(code: String!): String @auth(required: false)
   }
 `;

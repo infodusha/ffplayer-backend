@@ -1,7 +1,6 @@
 import apollo from 'apollo-server-express';
-const {gql} = apollo;
 
-export default gql`
+export default apollo.gql`
   type Trainer implements User {
     id: ID!
     pic: String!
@@ -9,5 +8,6 @@ export default gql`
     rate: Float
     rank: Rank!
     streamer: Boolean
+    games: [Game!]
   }
 `;

@@ -20,7 +20,6 @@ auth.configure(config.auth)
       subscriptions,
       playground: config.apollo.playground,
       debug: config.apollo.debug,
-      mocks: true,
     }))
     .catch((err) => {
       logger.error('Start error', err);

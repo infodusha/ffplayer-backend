@@ -1,7 +1,6 @@
 import apollo from 'apollo-server-express';
-const {gql} = apollo;
 
-export default gql`
+export default apollo.gql`
   interface User {
     id: ID
     pic: String
