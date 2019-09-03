@@ -2,6 +2,7 @@ import apollo from 'apollo-server-express';
 
 export default apollo.gql`
   type Mutation {
-    sendToken(email: String!): Boolean @auth(required: false)
+    "Send auth code"
+    code(email: String!): Boolean @auth(required: false)
   }
 `;
