@@ -4,7 +4,7 @@ import express from 'express';
 import apollo from 'apollo-server-express';
 import config from '../../config.json';
 import logger from './logger.js';
-import {getImageById} from './image.js';
+import {getImageById} from '../providers/image.js';
 
 /**
  * Create server

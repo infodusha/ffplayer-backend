@@ -1,5 +1,4 @@
-import News from '../models/News.js';
-import util from 'util';
+import {query} from '../services/db.js';
 
 /**
  * Get news part
@@ -8,5 +7,5 @@ import util from 'util';
  * @return {Promise<Array<any>>} news
  */
 export function getNews(first, length) {
-  return util.promisify(News.find).call(News, {}, null, {skip: first, limit: length});
+  return query('SELECT * FROM news LIMIT $1 OFFSET $2', length, first);
 }

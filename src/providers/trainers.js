@@ -1,5 +1,4 @@
-import Trainer from '../models/Trainer.js';
-import util from 'util';
+import {query} from '../services/db.js';
 
 /**
  * Get filtered trainers
@@ -9,8 +8,5 @@ import util from 'util';
  * @return {Promise<Array<any>>} trainers
  */
 export function getTrainers(rank, streamer, game) {
-  const filter = {
-    game,
-  };
-  return util.promisify(Trainer.find).call(News, filter, null, {limit: 20});
+  return query('SELECT * FROM trainers LIMIT 20');
 }
