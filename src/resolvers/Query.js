@@ -3,7 +3,7 @@ import {getTrainers} from '../providers/trainers.js';
 
 export default {
   Query: {
-    trainers(parent, {rank, streamer, game}) {
+    trainers(parent, {rank = null, streamer = null, game = null}) {
       return getTrainers(rank, streamer, game);
     },
     token(parent, {code}, {ip}) {
