@@ -12,7 +12,7 @@ export default async function context({req, connection}) {
     return connection.context;
   }
 
-  const ip = req.connection.remoteAddress;
+  const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
   const authorization = req.headers.authorization;
 
   if (authorization) {
@@ -25,7 +25,7 @@ export default async function context({req, connection}) {
         }
         return {ip, user};
       } catch (err) {
-        logger.error(err);
+        logger.debug(err);
         throw new apollo.AuthenticationError(err.message);
       }
     }
