@@ -74,10 +74,18 @@ export async function getToken(name, email, code, ip) {
   if (authDB.attempts <= 0) {
     throw new apollo.ApolloError('Reached naximum attempts', 13);
   }
-  const correct = await auth.compare(code, dbCode);
+  const correct = await auth.compare(code, authDB.code);
   if (!correct) {
-    await query('UPDATE auth SET attempts = attempts - 1 WHERE email = $1::text', email);
+    await query('UPDATE auth SET attempts = attempts - 1 WHERE email = $1', email);
     throw new apollo.ApolloError('Code not correct', 12);
+  }
+  let id;
+  const [user] = await query('SELECT id FROM users WHERE email = $1', email);
+  if (!user) {
+    const userId = await query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
+    id = userId;
+  } else {
+    id = user.id;
   }
   return auth.sign({id, ip});
 }
