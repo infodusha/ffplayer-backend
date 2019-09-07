@@ -1,6 +1,11 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import util from 'util';
 import fs from 'fs';
+
+const jwtSign = util.promisify(jwt.sign).bind(jwt);
+
+const jwtVerify = util.promisify(jwt.verify).bind(jwt);
 
 const cfg = {
   key: null,
@@ -18,23 +23,23 @@ export async function configure(config) {
 }
 
 /**
- * Get hash for password
- * @param {string} password
- * @return {Promise<string>} password hash
+ * Get hash for string
+ * @param {string} string
+ * @return {Promise<string>} hash
  */
-export async function hash(password) {
+export async function hash(string) {
   const salt = await bcrypt.genSalt(cfg.saltRounds);
-  return bcrypt.hash(password, salt);
+  return bcrypt.hash(string, salt);
 }
 
 /**
- * Copmare password and hash
- * @param {string} password
+ * Copmare string and hash
+ * @param {string} string
  * @param {string} hash
- * @return {Promise<Boolean>} is hash from this password
+ * @return {Promise<Boolean>} is hash from string
  */
-export function compare(password, hash) {
-  return bcrypt.compare(password, hash);
+export function compare(string, hash) {
+  return bcrypt.compare(string, hash);
 }
 
 /**
@@ -43,15 +48,7 @@ export function compare(password, hash) {
  * @return {Promise<String>} signed data
  */
 export function sign(data) {
-  return new Promise((resolve, reject) => {
-    jwt.sign(data, cfg.key, {algorithm: 'RS256'}, (err, token) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(token);
-      }
-    });
-  });
+  return jwtSign.call(data, cfg.key, {algorithm: 'RS256'});
 }
 
 /**
@@ -60,13 +57,5 @@ export function sign(data) {
  * @return {Promise<any>} decoded data
  */
 export function verify() {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, cfg.key, {algorithms: ['RS256']}, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
+  return jwtVerify.call(token, cfg.key, {algorithms: ['RS256']});
 }
