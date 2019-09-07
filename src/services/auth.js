@@ -2,6 +2,9 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import util from 'util';
 import fs from 'fs';
+import crypto from 'crypto';
+
+const randomBytes = util.promisify(crypto.randomBytes).bind(crypto);
 
 const jwtSign = util.promisify(jwt.sign).bind(jwt);
 
@@ -58,4 +61,12 @@ export function sign(data) {
  */
 export function verify() {
   return jwtVerify.call(token, cfg.key, {algorithms: ['RS256']});
+}
+
+/**
+ * Generate random code
+ */
+export async function code() {
+  const buf = await randomBytes(3);
+  return buf.toString('hex').toUpperCase();
 }
