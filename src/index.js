@@ -10,9 +10,12 @@ import resolvers from './resolvers/index.js';
 import context from './context.js';
 import subscriptions from './subscriptions.js';
 
-auth.configure(config.auth)
-    .then(() => db.connect())
-    .then(() => server.listen({
+
+(async () => {
+  try {
+    await auth.configure(config.auth);
+    await db.connect();
+    server.listen({
       typeDefs,
       resolvers,
       schemaDirectives,
@@ -20,7 +23,8 @@ auth.configure(config.auth)
       subscriptions,
       playground: config.apollo.playground,
       debug: config.apollo.debug,
-    }))
-    .catch((err) => {
-      logger.error('Start error', err);
     });
+  } catch (err) {
+    logger.error('Start error', err);
+  }
+})();
