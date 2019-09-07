@@ -1,9 +1,9 @@
+import {codeFor} from '../providers/token.js';
+
 export default {
   Mutation: {
-    code(parent, args, context) {
-      const {ip} = context;
-      const {email} = args;
-      return true;
+    code(parent, {email}, {ip}) {
+      return codeFor(email);
     },
   },
 };

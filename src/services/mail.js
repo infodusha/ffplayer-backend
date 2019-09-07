@@ -13,7 +13,7 @@ const transport = mailer.createTransport({
 /**
  * Send email
  * @param {{ from: string, to: string, subject: string, text: string, html: string }} options email options
- * @return {{ messageId }} result
+ * @return {Promise<any>} message id
  */
 export function send(options) {
   return new Promise((resove, reject) => {
@@ -23,7 +23,7 @@ export function send(options) {
         reject(error);
       } else {
         logger.debug('Message sent', options);
-        resove(info);
+        resove(info.messageId);
       }
     });
   });
