@@ -1,4 +1,4 @@
-
+import {createContext} from './context.js';
 
 /**
  * Runs when user subscribes
@@ -6,14 +6,13 @@
  * @param {any} socket
  * @return {any} socket context
  */
-function onConnect(params, socket) {
-  const ip = socket.upgradeReq.socket.remoteAddress;
-  const token = connectionParams.token;
-  // TODO: decode & test token
-  return {ip, token};
+function onConnect(params, {upgradeReq}) {
+  const {headers, socket} = upgradeReq;
+  const ip = headers['x-real-ip'] || socket.remoteAddress;
+  const authorization = headers.authorization;
+  return createContext(ip, authorization);
 }
 
 export default {
   onConnect,
-
 };

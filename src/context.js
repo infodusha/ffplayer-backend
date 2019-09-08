@@ -3,18 +3,12 @@ import * as auth from './services/auth.js';
 import logger from './services/logger.js';
 
 /**
- * Context shaper
- * @param {{ req, connection }} context
- * @return {any} context
+ * Create context
+ * @param {string} ip
+ * @param {string} authorization
+ * @return {{ip:string, user}|{ip:string}} context
  */
-export default async function context({req, connection}) {
-  if (connection) {
-    return connection.context;
-  }
-
-  const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
-  const authorization = req.headers.authorization;
-
+export async function createContext(ip, authorization) {
   if (authorization) {
     const token = authorization.replace('Bearer ', '');
     if (token) {
@@ -30,6 +24,19 @@ export default async function context({req, connection}) {
       }
     }
   }
-
   return {ip};
+}
+
+/**
+ * Context shaper
+ * @param {{ req, connection }} context
+ * @return {any} context
+ */
+export default function context({req, connection}) {
+  if (connection) {
+    return connection.context;
+  }
+  const ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
+  const authorization = req.headers.authorization;
+  return createContext(ip, authorization);
 }
