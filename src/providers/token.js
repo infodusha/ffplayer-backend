@@ -59,6 +59,17 @@ export async function codeFor(email) {
 }
 
 /**
+ *
+ */
+async function getId(email) {
+  const [user] = await query('SELECT id FROM users WHERE email = $1', email);
+  if (!user) {
+    return query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
+  }
+  return user.id;
+}
+
+/**
  * Check code and generate token
  * @param {string} name
  * @param {string} email
@@ -79,13 +90,6 @@ export async function getToken(name, email, code, ip) {
     await query('UPDATE auth SET attempts = attempts - 1 WHERE email = $1', email);
     throw new apollo.ApolloError('Code not correct', 12);
   }
-  let id;
-  const [user] = await query('SELECT id FROM users WHERE email = $1', email);
-  if (!user) {
-    const userId = await query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
-    id = userId;
-  } else {
-    id = user.id;
-  }
+  const id = await getId(email, name);
   return auth.sign({id, ip});
 }
