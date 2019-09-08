@@ -1,0 +1,21 @@
+apps:
+  - script: node
+    args: --experimental-modules --no-warnings ./src/index.js
+    name: backend
+    env:
+      NODE_ENV: development
+    env_production:
+      NODE_ENV: production
+deploy:
+  production:
+    key: C:/keys/ffplayer_rsa
+    user: root
+    host:
+      - ffplayer.pro
+    ssh_options: StrictHostKeyChecking=no
+    ref: origin/master
+    repo: git@github.com:infodusha/ffplayer-backend.git
+    path: /root/backend/
+    pre-setup: apt-get install git -y; ls -la
+    post-setup: ls -la
+    post-deploy: npm install --prod && pm2 startOrRestart process.yaml --env production
