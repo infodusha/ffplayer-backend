@@ -7,9 +7,10 @@
     "playground": true,
     "debug": true,
     "cors": {
+      "credentials": true,
       "origin": "*",
       "methods": ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-      "allowedHeaders": ["Content-Type", "Authorization"],
+      "allowedHeaders": ["Content-Type", "Authorization", "X-Real-Ip"],
       "preflightContinue": false,
       "optionsSuccessStatus": 204
     },
