@@ -59,12 +59,18 @@ export async function codeFor(email) {
 }
 
 /**
- *
+ * Get user id and add user if needed
+ * @param {string} email
+ * @param {string} name
+ * @return {number} id
  */
-async function getId(email) {
+async function getId(email, name) {
   const [user] = await query('SELECT id FROM users WHERE email = $1', email);
   if (!user) {
     return query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
+  }
+  if (name) {
+    throw new apollo.ApolloError('User already exists, name is unnecessarily', 11);
   }
   return user.id;
 }

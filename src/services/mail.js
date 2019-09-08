@@ -20,7 +20,7 @@ export function send(options) {
     transport.sendMail(options, (err, info) => {
       if (err) {
         logger.error('Error sending message', err);
-        reject(error);
+        reject(err);
       } else {
         logger.debug('Message sent', options);
         resove(info.messageId);
