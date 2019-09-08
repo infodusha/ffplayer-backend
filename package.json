@@ -11,6 +11,7 @@
     "start": "node --experimental-modules --no-warnings ./src/index.js",
     "deploy:setup": "pm2 deploy process.yaml production setup",
     "deploy:revert": "pm2 deploy process.yaml production revert 1",
+    "deploy:force": "pm2 deploy process.yaml production --force",
     "deploy": "pm2 deploy process.yaml production"
   },
   "repository": {
