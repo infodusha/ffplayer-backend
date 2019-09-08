@@ -20,8 +20,7 @@
     }
   },
   "logger": {
-    "level": "info",
-    "console": true
+    "level": "info"
   },
   "mail": {
     "host": "smtp.yandex.ru",
