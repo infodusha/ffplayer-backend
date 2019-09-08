@@ -1,14 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import util from 'util';
 import fs from 'fs';
 import crypto from 'crypto';
-
-const randomBytes = util.promisify(crypto.randomBytes).bind(crypto);
-
-const jwtSign = util.promisify(jwt.sign).bind(jwt);
-
-const jwtVerify = util.promisify(jwt.verify).bind(jwt);
 
 const cfg = {
   key: null,
@@ -51,7 +44,15 @@ export function compare(string, hash) {
  * @return {Promise<String>} signed data
  */
 export function sign(data) {
-  return jwtSign.call(data, cfg.key, {algorithm: 'RS256'});
+  return new Promise((resolve, reject) => {
+    jwt.sign(data, cfg.key, {algorithm: 'RS256'}, (err, token) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(token);
+      }
+    });
+  });
 }
 
 /**
@@ -59,14 +60,29 @@ export function sign(data) {
  * @param {string} token
  * @return {Promise<any>} decoded data
  */
-export function verify() {
-  return jwtVerify.call(token, cfg.key, {algorithms: ['RS256']});
+export function verify(token) {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, cfg.key, {algorithms: ['RS256']}, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
 }
 
 /**
  * Generate random code
  */
 export async function code() {
-  const buf = await randomBytes(3);
-  return buf.toString('hex').toUpperCase();
+  return new Promise((resole, reject) => {
+    crypto.randomBytes(3, (err, buf) => {
+      if (err) {
+        reject(err);
+      } else {
+        resole(buf.toString('hex').toUpperCase());
+      }
+    });
+  });
 }

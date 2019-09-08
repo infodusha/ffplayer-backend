@@ -97,5 +97,6 @@ export async function getToken(name, email, code, ip) {
     throw new apollo.ApolloError('Code not correct', 12);
   }
   const id = await getId(email, name);
+  await query('DELETE FROM auth WHERE email = $1', email);
   return auth.sign({id, ip});
 }
