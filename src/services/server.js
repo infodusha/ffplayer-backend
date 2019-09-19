@@ -5,6 +5,7 @@ import apollo from 'apollo-server-express';
 import config from '../../config.json';
 import logger from './logger.js';
 import {getImageById} from '../providers/image.js';
+import {fill} from '../providers/temp.js';
 
 /**
  * Create server
@@ -15,11 +16,20 @@ function create() {
 
   app.get('/image/:id', async (req, res) => {
     try {
-      const {data, contentType} = await getImageById(req.params.id);
-      res.set('Content-Type', contentType);
-      res.send('' + data);
+      const data = await getImageById(req.params.id);
+      res.end(data, 'binary');
     } catch (err) {
       res.status(400).send('Bad Request');
+    }
+  });
+
+  app.get('/temp/:length', async (req, res) => {
+    try {
+      await fill(Number(req.params.length));
+      res.end('Filled');
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err.message);
     }
   });
 
