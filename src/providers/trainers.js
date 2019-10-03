@@ -21,7 +21,7 @@ export function getTrainers(rank, streamer, game, first, length) {
   return query(`SELECT trainers.id, users.name, users.pic, trainers.rank, trainers.rate, trainers.streamer
                 FROM trainers
                 JOIN users ON users.id = trainers.users_id
-                JOIN games ON games.users_id = trainers.users_id
+                JOIN user_games ON user_games.users_id = trainers.users_id
                 WHERE rank = coalesce($1, rank)
                 AND streamer = coalesce($2::boolean, streamer)
                 AND game = $3

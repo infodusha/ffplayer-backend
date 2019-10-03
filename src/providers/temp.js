@@ -16,7 +16,7 @@ function shuffle(arr) {
 async function clean() {
   await query('TRUNCATE TABLE users');
   await query('TRUNCATE TABLE trainers');
-  await query('TRUNCATE TABLE games');
+  await query('TRUNCATE TABLE user_games');
   await query('ALTER SEQUENCE users_id_seq RESTART');
   await query('ALTER SEQUENCE trainers_id_seq RESTART');
 }
@@ -54,13 +54,13 @@ function addTrainer(id) {
 async function addGame(id) {
   const [game, game1] = shuffle(['FRTN', 'WOTB', 'PUBG']);
   const trains = faker.random.boolean();
-  await query('INSERT INTO games(users_id, game, trains) VALUES($1, $2, $3)', id, game, trains);
+  await query('INSERT INTO user_games(users_id, game, trains) VALUES($1, $2, $3)', id, game, trains);
   const isGame1 = faker.random.boolean();
   if (!isGame1) {
     return;
   }
   const trains1 = faker.random.boolean();
-  return query('INSERT INTO games(users_id, game, trains) VALUES($1, $2, $3)', id, game1, trains1);
+  return query('INSERT INTO user_games(users_id, game, trains) VALUES($1, $2, $3)', id, game1, trains1);
 }
 
 
