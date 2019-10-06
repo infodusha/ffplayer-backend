@@ -55,13 +55,13 @@ function addTrainer(id) {
 async function addGame(id) {
   const [game, game1] = shuffle([1, 2, 3]);
   const trains = faker.random.boolean();
-  await query('INSERT INTO user_games(users_id, game, trains) VALUES($1, $2, $3)', id, game, trains);
+  await query('INSERT INTO user_games(users_id, games_id, trains) VALUES($1, $2, $3)', id, game, trains);
   const isGame1 = faker.random.boolean();
   if (!isGame1) {
     return;
   }
   const trains1 = faker.random.boolean();
-  return query('INSERT INTO user_games(users_id, game, trains) VALUES($1, $2, $3)', id, game1, trains1);
+  return query('INSERT INTO user_games(users_id, games_id, trains) VALUES($1, $2, $3)', id, game1, trains1);
 }
 
 
