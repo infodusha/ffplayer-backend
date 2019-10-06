@@ -1,5 +1,6 @@
 import {query} from '../services/db.js';
 import faker from 'faker';
+import uuid from 'uuid/v4.js';
 
 /**
  * Shuffle array
@@ -28,7 +29,7 @@ async function clean() {
 async function addUser() {
   const email = faker.internet.email();
   const name = faker.name.findName();
-  const pic = faker.finance.bitcoinAddress().substr(0, 32).toLocaleLowerCase();
+  const pic = uuid();
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
   return id;
 }
@@ -52,7 +53,7 @@ function addTrainer(id) {
  * @return {Promise} Added
  */
 async function addGame(id) {
-  const [game, game1] = shuffle(['FRTN', 'WOTB', 'PUBG']);
+  const [game, game1] = shuffle([1, 2, 3]);
   const trains = faker.random.boolean();
   await query('INSERT INTO user_games(users_id, game, trains) VALUES($1, $2, $3)', id, game, trains);
   const isGame1 = faker.random.boolean();

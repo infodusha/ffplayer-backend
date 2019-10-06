@@ -6,6 +6,7 @@ import News from './News.js';
 import Trainer from './Trainer.js';
 import Query from './Query.js';
 import Mutation from './Mutation.js';
+import Game from './Game.js';
 
 export default [
   scalars,
@@ -14,6 +15,7 @@ export default [
   ...interfaces,
   News,
   Trainer,
+  Game,
   Query,
   Mutation,
 ];

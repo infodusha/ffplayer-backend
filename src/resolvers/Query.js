@@ -1,6 +1,7 @@
 import {getNews} from '../providers/news.js';
 import {getTrainers} from '../providers/trainers.js';
 import {getToken} from '../providers/token.js';
+import {getGames} from '../providers/games.js';
 
 export default {
   Query: {
@@ -12,6 +13,9 @@ export default {
     },
     news(parent, {first = 0, length}) {
       return getNews(first, length);
+    },
+    games() {
+      return getGames();
     },
   },
 };
