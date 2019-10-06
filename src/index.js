@@ -15,7 +15,7 @@ import subscriptions from './subscriptions.js';
   try {
     await auth.configure(config.auth);
     await db.connect();
-    server.listen({
+    await server.listen({
       typeDefs,
       resolvers,
       schemaDirectives,
@@ -25,6 +25,7 @@ import subscriptions from './subscriptions.js';
       debug: config.apollo.debug,
     });
   } catch (err) {
+    console.error(err);
     logger.error('Start error', err);
   }
 })();

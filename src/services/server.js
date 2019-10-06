@@ -1,5 +1,4 @@
 import http from 'http';
-import util from 'util';
 import express from 'express';
 import apollo from 'apollo-server-express';
 import config from '../../config.json';
@@ -50,7 +49,13 @@ export async function listen(options) {
   const httpServer = http.createServer(app);
   server.installSubscriptionHandlers(httpServer);
 
-  await util.promisify(httpServer.listen).call(httpServer, config.apollo.server);
+  await new Promise((resolve, reject) => httpServer.listen(config.apollo.server, (err) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve();
+    }
+  }));
 
   const {host, port} = config.apollo.server;
   logger.info(`Server listening at http://${host}:${port}${server.graphqlPath}`);
