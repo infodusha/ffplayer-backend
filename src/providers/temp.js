@@ -1,6 +1,40 @@
 import {query} from '../services/db.js';
 import faker from 'faker';
 import uuid from 'uuid/v4.js';
+import https from 'https';
+import Stream from 'stream';
+import fs from 'fs';
+
+/**
+ * Get image from url
+ * @param {string} url
+ * @return {Promise<Blob>} image
+ */
+function getImageByUrl(url) {
+  return new Promise((resolve, reject) => {
+    https.request(url, (response) => {
+      const data = new Stream.Transform();
+
+      response.on('data', function(chunk) {
+        data.push(chunk);
+      });
+
+      response.on('end', () => {
+        resolve(data.read());
+      });
+    }).end();
+  });
+}
+
+/**
+ * Save image to fs
+ * @param {string} url
+ * @param {string} name
+ */
+async function saveImage(url, name) {
+  const picData = await getImageByUrl(url);
+  fs.promises.writeFile('images/' + name, picData);
+}
 
 /**
  * Shuffle array
@@ -30,6 +64,8 @@ async function addUser() {
   const email = faker.internet.email();
   const name = faker.name.findName();
   const pic = uuid();
+  const url = faker.internet.avatar();
+  saveImage(url, pic);
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
   return id;
 }

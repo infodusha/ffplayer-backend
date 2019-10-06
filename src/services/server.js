@@ -3,8 +3,8 @@ import express from 'express';
 import apollo from 'apollo-server-express';
 import config from '../../config.json';
 import logger from './logger.js';
-import {getImageById} from '../providers/image.js';
 import {fill} from '../providers/temp.js';
+import fs from 'fs';
 
 /**
  * Create server
@@ -13,15 +13,16 @@ import {fill} from '../providers/temp.js';
 function create() {
   const app = express();
 
-  app.get('/image/:id', async (req, res) => {
+  app.get('/image/:uuid', async (req, res) => {
     try {
-      const data = await getImageById(req.params.id);
+      const data = await fs.promises.readFile('images/' + req.params.uuid);
       res.end(data, 'binary');
-    } catch (err) {
+    } catch {
       res.status(400).send('Bad Request');
     }
   });
 
+  // TODO: remove
   app.get('/temp/:length', async (req, res) => {
     try {
       await fill(Number(req.params.length));
