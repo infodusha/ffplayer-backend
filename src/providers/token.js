@@ -1,4 +1,4 @@
-import apollo from 'apollo-server-express';
+import {ApolloError} from '../services/error.js';
 import {query} from '../services/db.js';
 import * as auth from '../services/auth.js';
 import * as mail from '../services/mail.js';
@@ -47,7 +47,7 @@ async function save(email, code) {
 export async function codeFor(email) {
   const authDB = await getAuth(email);
   if (authDB !== null) {
-    throw new apollo.ApolloError('User already got code', 15);
+    throw new ApolloError('User already got code');
   }
   const code = await auth.code();
   const [inUsers] = await Promise.all([
@@ -70,7 +70,7 @@ async function getId(email, name) {
     return query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
   }
   if (name) {
-    throw new apollo.ApolloError('User already exists, name is unnecessarily', 11);
+    throw new ApolloError('User already exists, name is unnecessarily');
   }
   return user.id;
 }
@@ -86,15 +86,15 @@ async function getId(email, name) {
 export async function getToken(name, email, code, ip) {
   const authDB = await getAuth(email);
   if (authDB === null) {
-    throw new apollo.ApolloError('Code expired', 14);
+    throw new ApolloError('Code expired');
   }
   if (authDB.attempts <= 0) {
-    throw new apollo.ApolloError('Reached naximum attempts', 13);
+    throw new ApolloError('Reached maximum attempts');
   }
   const correct = await auth.compare(code, authDB.code);
   if (!correct) {
     await query('UPDATE auth SET attempts = attempts - 1 WHERE email = $1', email);
-    throw new apollo.ApolloError('Code not correct', 12);
+    throw new ApolloError('Code not correct');
   }
   const id = await getId(email, name);
   await query('DELETE FROM auth WHERE email = $1', email);

@@ -1,0 +1,10 @@
+[
+  { "code": 1, "message": "IP adress does not match" },
+  { "code": 2, "message": "Not autorized" },
+  { "code": 3, "message": "Autorized" },
+  { "code": 11, "message": "User already exists, name is unnecessarily" },
+  { "code": 12, "message": "Code not correct" },
+  { "code": 13, "message": "Reached maximum attempts" },
+  { "code": 14, "message": "Code expired" },
+  { "code": 15, "message": "User already got code" }
+]

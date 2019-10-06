@@ -1,13 +1,11 @@
 import apollo from 'apollo-server-express';
 import graphql from 'graphql';
-
-const {SchemaDirectiveVisitor, AuthenticationError} = apollo;
-const {defaultFieldResolver} = graphql;
+import {ApolloError} from '../services/error.js';
 
 /**
  * Protects data by auth
  */
-export default class AuthDirective extends SchemaDirectiveVisitor {
+export default class AuthDirective extends apollo.SchemaDirectiveVisitor {
   /**
    * Can be applyed on object
    * @param {any} type
@@ -41,7 +39,7 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
 
     Object.keys(fields).forEach((fieldName) => {
       const field = fields[fieldName];
-      const {resolve = defaultFieldResolver} = field;
+      const {resolve = graphql.defaultFieldResolver} = field;
 
       field.resolve = function(...args) {
         let required = null;
@@ -59,10 +57,10 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
         const context = args[2];
 
         if (!context.user && required) {
-          throw new AuthenticationError('Not autorized');
+          throw new ApolloError('Not autorized');
         }
         if (context.user && !required) {
-          throw new AuthenticationError('Autorized');
+          throw new ApolloError('Autorized');
         }
 
         return resolve.apply(this, args);

@@ -1,4 +1,4 @@
-import apollo from 'apollo-server-express';
+import {ApolloError} from './services/error.js';
 import * as auth from './services/auth.js';
 import logger from './services/logger.js';
 
@@ -15,12 +15,12 @@ export async function createContext(ip, authorization) {
       try {
         const user = await auth.verify(token);
         if (user.ip !== ip) {
-          throw new apollo.AuthenticationError('IP adress does not match');
+          throw new ApolloError('IP adress does not match');
         }
         return {ip, user};
       } catch (err) {
         logger.debug(err);
-        throw new apollo.AuthenticationError(err.message);
+        throw new ApolloError(err);
       }
     }
   }
