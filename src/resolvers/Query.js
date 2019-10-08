@@ -5,14 +5,14 @@ import {getGames} from '../providers/games.js';
 
 export default {
   Query: {
-    trainers(parent, {rank = null, streamer = null, game = null, first = 0, length}) {
-      return getTrainers(rank, streamer, game, first, length);
+    trainers(parent, {rank = null, streamer = null, game = null, cursor = 0, length}) {
+      return getTrainers(rank, streamer, game, cursor, length);
     },
     token(parent, {name, email, code}, {ip}) {
       return getToken(name, email, code, ip);
     },
-    news(parent, {first = 0, length}) {
-      return getNews(first, length);
+    news(parent, {cursor = 0, length}) {
+      return getNews(cursor, length);
     },
     games() {
       return getGames();
