@@ -100,21 +100,3 @@ export async function getToken(name, email, code, ip) {
   await query('DELETE FROM auth WHERE email = $1', email);
   return auth.sign({id, ip});
 }
-
-
-/**
- * Clean old auth records
- */
-async function clean() {
-  const rows = await query('DELETE FROM auth WHERE expires < NOW() RETURNING attempts');
-  return rows.length;
-}
-
-/**
- * Start cleaner
- * @param {number} timeout
- */
-export async function cleaner(timeout) {
-  await clean();
-  setTimeout(cleaner, timeout);
-}
