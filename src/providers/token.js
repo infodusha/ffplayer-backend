@@ -67,6 +67,9 @@ export async function codeFor(email) {
 async function getId(email, name) {
   const [user] = await query('SELECT id FROM users WHERE email = $1', email);
   if (!user) {
+    if (!name) {
+      throw new ApolloError('User not exists, name is necessarily');
+    }
     return query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
   }
   if (name) {
