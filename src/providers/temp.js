@@ -4,6 +4,7 @@ import uuid from 'uuid/v4.js';
 import https from 'https';
 import Stream from 'stream';
 import fs from 'fs';
+import * as auth from '../services/auth.js';
 
 /**
  * Get image from url
@@ -54,6 +55,23 @@ async function clean() {
   await query('TRUNCATE TABLE user_games');
   await query('ALTER SEQUENCE users_id_seq RESTART');
   await query('ALTER SEQUENCE trainers_id_seq RESTART');
+}
+
+/**
+ * Adds our prepared users
+ */
+async function addPrepared() {
+  const email = 'admin@ffplayer.pro';
+  const name = 'Admin';
+  const pic = uuid();
+  const url = faker.internet.avatar();
+  saveImage(url, pic);
+  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
+  await query('INSERT INTO trainers(users_id, rank, rate, streamer) VALUES($1, $2, $3, $4)', id, 'TOP', 1.23, true);
+  await query('INSERT INTO user_games(users_id, games_id, trains) VALUES($1, $2, $3)', id, 1, true);
+  const codeHash = await auth.hash('admin');
+  await query('INSERT INTO auth (email, code, attempts, expires) VALUES ($1, $2, $3, $4::timestamptz)',
+      email, codeHash, 100, '2050-04-04 20:00:00');
 }
 
 /**
@@ -108,6 +126,7 @@ async function addGame(id) {
  */
 export async function fill(length) {
   await clean();
+  await addPrepared();
   const users = [];
   for (let i = 0; i < length; i++) {
     users.push(addUser());
