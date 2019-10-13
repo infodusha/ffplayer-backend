@@ -5,5 +5,6 @@ export default apollo.gql`
     id: ID
     pic: String
     name: String
+    games: [Game]
   }
 `;

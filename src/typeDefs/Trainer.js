@@ -8,6 +8,6 @@ export default apollo.gql`
     rate: Float
     rank: Rank!
     streamer: Boolean
-    games: [Game!]
+    games: [Game]
   }
 `;

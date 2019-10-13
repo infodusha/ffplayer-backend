@@ -1,7 +1,7 @@
 import {getUserGames} from '../providers/user.js';
 
 export default {
-  Trainer: {
+  User: {
     games({id}) {
       return getUserGames(id);
     },
