@@ -1,3 +1,7 @@
 export default {
-  Trainer: {},
+  Trainer: {
+    games({id}) {
+
+    },
+  },
 };

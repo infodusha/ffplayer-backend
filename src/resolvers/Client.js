@@ -1,7 +1,7 @@
 export default {
-  User: {
+  Client: {
     __resolveType(user, context, info) {
-      if (user.rank) {
+      if (user.rank !== null && user.rank !== undefined) {
         return 'Trainer';
       }
 

@@ -2,6 +2,7 @@ import {getNews} from '../providers/news.js';
 import {getTrainers} from '../providers/trainers.js';
 import {getToken} from '../providers/token.js';
 import {getGames} from '../providers/games.js';
+import {getUserById} from '../providers/user.js';
 
 export default {
   Query: {
@@ -16,6 +17,9 @@ export default {
     },
     games() {
       return getGames();
+    },
+    user(parent, {id}) {
+      return getUserById(id);
     },
   },
 };

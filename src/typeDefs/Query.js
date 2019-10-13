@@ -10,5 +10,7 @@ export default apollo.gql`
     news(cursor: ID, length: Int!): [News]
     "All site games"
     games: [Game]
+    "User data"
+    user(id: ID): Client
   }
 `;
