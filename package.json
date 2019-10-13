@@ -27,7 +27,7 @@
     "eslint": "^6.5.1",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^1.19.3",
-    "pm2": "^3.5.1"
+    "pm2": "^4.0.0"
   },
   "dependencies": {
     "apollo-server-express": "^2.9.6",
