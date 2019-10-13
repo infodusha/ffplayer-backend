@@ -11,6 +11,6 @@ export default apollo.gql`
     "All site games"
     games: [Game]
     "User data"
-    user(id: ID): Client
+    user(id: ID!): Client
   }
 `;
