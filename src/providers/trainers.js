@@ -28,6 +28,7 @@ export function getTrainers(rank, streamer, game, cursor, length) {
                 trainers.id > $1
                 AND rank = coalesce($2, rank)
                 AND streamer = coalesce($3::boolean, streamer)
-                AND games_id = $4
+                AND user_games.games_id = $4
+                AND user_games.trains = true
                 LIMIT $5`, cursor, rank, streamer, game, length);
 }
