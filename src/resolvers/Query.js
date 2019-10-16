@@ -1,7 +1,7 @@
 import {getNews} from '../providers/news.js';
 import {getTrainers} from '../providers/trainers.js';
 import {getToken} from '../providers/token.js';
-import {getGames} from '../providers/games.js';
+import {getGames, getGameByShortname} from '../providers/games.js';
 import {getUserById} from '../providers/user.js';
 
 export default {
@@ -20,6 +20,9 @@ export default {
     },
     user(parent, {id}) {
       return getUserById(id);
+    },
+    game(parent, {shortname}) {
+      return getGameByShortname(shortname);
     },
   },
 };

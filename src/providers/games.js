@@ -2,10 +2,20 @@ import {query} from '../services/db.js';
 
 /**
  * Get games
- * @return {Promise<Array<any>>} news
+ * @return {Promise<Array<any>>} games
  */
 export function getGames() {
   return query('SELECT id, name, shortname, description, tags, site FROM games');
+}
+
+/**
+ * Get game
+ * @param {string} shortname
+ * @return {Promise<any>} game
+ */
+export async function getGameByShortname(shortname) {
+  const [game] = await query('SELECT id, name, shortname, description, tags, site FROM games WHERE shortname = $1', shortname);
+  return game;
 }
 
 /**
