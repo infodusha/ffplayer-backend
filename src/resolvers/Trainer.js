@@ -1,4 +1,4 @@
-import {getUserGames} from '../providers/user.js';
+import {getUserGames} from '../providers/client.js';
 
 export default {
   Trainer: {

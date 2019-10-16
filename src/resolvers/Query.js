@@ -1,8 +1,6 @@
-import {getNews} from '../providers/news.js';
+import {query} from '../services/db.js';
 import {getTrainers} from '../providers/trainers.js';
 import {getToken} from '../providers/token.js';
-import {getGames, getGameByShortname} from '../providers/games.js';
-import {getUserById} from '../providers/user.js';
 
 export default {
   Query: {
@@ -13,16 +11,19 @@ export default {
       return getToken(name, email, code, ip);
     },
     news(parent, {cursor = 0, length}) {
-      return getNews(cursor, length);
+      return query('SELECT * FROM news WHERE id > $1 LIMIT $2', cursor, length);
     },
     games() {
-      return getGames();
+      return query('SELECT id, name, shortname, description, tags, site FROM games');
     },
-    user(parent, {id}) {
-      return getUserById(id);
+    async user(parent, {id}) {
+      const [data] = await query('SELECT id, pic, name FROM users WHERE id = $1', id);
+      return data;
     },
-    game(parent, {shortname}) {
-      return getGameByShortname(shortname);
+    async game(parent, {shortname}) {
+      const [game] = await query(`SELECT id, name, shortname, description, tags, site
+          FROM games WHERE shortname = $1`, shortname);
+      return game;
     },
   },
 };

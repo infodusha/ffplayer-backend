@@ -1,9 +1,9 @@
-import {codeFor} from '../providers/token.js';
+import {postCode} from '../providers/code.js';
 
 export default {
   Mutation: {
     code(parent, {email}, {ip}) {
-      return codeFor(email);
+      return postCode(email);
     },
   },
 };
