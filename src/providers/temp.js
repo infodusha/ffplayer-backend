@@ -28,6 +28,15 @@ function getImageByUrl(url) {
 }
 
 /**
+ * Get probability
+ * @param {number} percent
+ * @return {boolean} is probable
+ */
+function probability(percent) {
+  return (faker.random.number(100) + 1) <= percent;
+}
+
+/**
  * Save image to fs
  * @param {string} url
  * @param {string} name
@@ -38,23 +47,14 @@ async function saveImage(url, name) {
 }
 
 /**
- * Shuffle array
- * @param {Array<any>} arr
- * @return {Array<any>} shuffled array
- */
-function shuffle(arr) {
-  return arr.sort(() => Math.random() - Math.random());
-}
-
-/**
  * Cleans tables
  */
 async function clean() {
   await query('TRUNCATE TABLE users');
   await query('TRUNCATE TABLE trainers');
+  await query('TRUNCATE TABLE streamers');
   await query('TRUNCATE TABLE user_games');
   await query('ALTER SEQUENCE users_id_seq RESTART');
-  await query('ALTER SEQUENCE trainers_id_seq RESTART');
 }
 
 /**
@@ -65,10 +65,11 @@ async function addPrepared() {
   const name = 'Admin';
   const pic = uuid();
   const url = faker.internet.avatar();
+  const gameId = faker.random.number(2) + 1;
   saveImage(url, pic);
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
-  await query('INSERT INTO trainers(users_id, rank, rate, streamer) VALUES($1, $2, $3, $4)', id, 'TOP', 1.23, true);
-  await query('INSERT INTO user_games(users_id, games_id, trains) VALUES($1, $2, $3)', id, 1, true);
+  await query('INSERT INTO trainers(users_id, rank, rate, games_id) VALUES($1, $2, $3, $4)', id, 'TOP', 1.23, gameId);
+  await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
   const codeHash = await auth.hash('admin');
   await query('INSERT INTO auth (email, code, attempts, expires) VALUES ($1, $2, $3, $4::timestamptz)',
       email, codeHash, 100, '2050-04-04 20:00:00');
@@ -85,37 +86,39 @@ async function addUser() {
   const url = faker.internet.avatar();
   saveImage(url, pic);
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
-  return id;
+  if (probability(80)) {
+    const gameId = faker.random.number(2) + 1;
+    await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
+    if (probability(70)) {
+      await addTrainer(id, gameId);
+      if (probability(50)) {
+        let gameId2 = faker.random.number(2) + 1;
+        do {
+          gameId2 = faker.random.number(2) + 1;
+        } while (gameId2 === gameId);
+        await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId2);
+        await addTrainer(id, gameId2);
+        if (probability(50)) {
+          await query('INSERT INTO streamers(users_id, games_id) VALUES($1, $2)', id, gameId2);
+        }
+      }
+    }
+    if (probability(50)) {
+      await query('INSERT INTO streamers(users_id, games_id) VALUES($1, $2)', id, gameId);
+    }
+  }
 }
 
 /**
  * Adds random trainer
  * @param {Number} id user id
+ * @param {Number} gameId
  * @return {Promise} Added
  */
-function addTrainer(id) {
-  const [rank] = shuffle(['TOP', 'MASTER', 'EXPERT']);
+function addTrainer(id, gameId) {
+  const rank = faker.random.arrayElement(['TOP', 'MASTER', 'EXPERT']);
   const rate = Number((faker.random.number() / faker.random.number()).toFixed(2));
-  const streamer = faker.random.boolean();
-  return query('INSERT INTO trainers(users_id, rank, rate, streamer) VALUES($1, $2, $3, $4) RETURNING id',
-      id, rank, rate, streamer);
-}
-
-/**
- * Adds random game
- * @param {Number} id user id
- * @return {Promise} Added
- */
-async function addGame(id) {
-  const [game, game1] = shuffle([1, 2, 3]);
-  const trains = faker.random.boolean();
-  await query('INSERT INTO user_games(users_id, games_id, trains) VALUES($1, $2, $3)', id, game, trains);
-  const isGame1 = faker.random.boolean();
-  if (!isGame1) {
-    return;
-  }
-  const trains1 = faker.random.boolean();
-  return query('INSERT INTO user_games(users_id, games_id, trains) VALUES($1, $2, $3)', id, game1, trains1);
+  return query('INSERT INTO trainers(users_id, rank, rate, games_id) VALUES($1, $2, $3, $4)', id, rank, rate, gameId);
 }
 
 
@@ -127,14 +130,7 @@ async function addGame(id) {
 export async function fill(length) {
   await clean();
   await addPrepared();
-  const users = [];
   for (let i = 0; i < length; i++) {
-    users.push(addUser());
+    addUser();
   }
-  const ids = await Promise.all(users);
-  const trainersUserIds = shuffle(ids).slice(0, Math.round(length / 4));
-  const trainers = trainersUserIds.map(addTrainer);
-  await Promise.all(trainers);
-  const games = trainersUserIds.map(addGame);
-  await Promise.all(games);
 }
