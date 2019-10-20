@@ -62,8 +62,7 @@ async function clean() {
       .map((filename) => fs.promises.unlink(`images/${filename}`));
   await Promise.all(unlinkPromises);
   await query('TRUNCATE TABLE auth');
-  await query('TRUNCATE TABLE users CASCADE');
-  await query('ALTER SEQUENCE users_id_seq RESTART');
+  await query('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
 }
 
 /**
