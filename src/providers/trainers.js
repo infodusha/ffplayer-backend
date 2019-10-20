@@ -40,7 +40,8 @@ export function getTrainers(rank, streamer, game, offset, length) {
       FROM trainers
       JOIN users ON users.id = trainers.users_id AND trainers.games_id = $5
       LEFT JOIN streamers ON users.id = streamers.users_id AND streamers.games_id = $5
-      AND rank = coalesce($1, rank)
+      WHERE
+      rank = coalesce($1, rank)
       AND coalesce(streamers.users_id::bool, false) = coalesce($2::boolean, coalesce(streamers.users_id::bool, false))
       ORDER BY rate DESC
       OFFSET $3
