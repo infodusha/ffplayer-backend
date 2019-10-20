@@ -9,7 +9,11 @@ export function validate(callback) {
   try {
     callback(v8n);
   } catch (err) {
-    const message = `Validation ${err.rule.name}(${err.rule.args.join()}) failed on value ${err.value}`;
+    let message = `Validation '${err.rule.name}'`;
+    if (err.rule.args.length) {
+      message += `(${err.rule.args.join()})`;
+    }
+    message += ` failed on value ${err.value}`;
     throw new apollo.ValidationError(message);
   }
 }

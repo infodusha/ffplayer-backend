@@ -29,9 +29,6 @@ export default {
       return query('SELECT id, name, shortname, description, tags, site FROM games ORDER BY id');
     },
     async user(parent, {id}) {
-      validate((validator) => {
-        validator().number().greaterThan(0).check(id);
-      });
       const [data] = await query('SELECT id, pic, name FROM users WHERE id = $1', id);
       return data;
     },
