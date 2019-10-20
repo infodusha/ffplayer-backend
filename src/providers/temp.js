@@ -47,13 +47,25 @@ async function saveImage(url, name) {
 }
 
 /**
- * Cleans tables
+ * Cleans data
  */
 async function clean() {
-  await query('TRUNCATE TABLE users');
-  await query('TRUNCATE TABLE trainers');
-  await query('TRUNCATE TABLE streamers');
-  await query('TRUNCATE TABLE user_games');
+  const gameSkills = await query('SELECT pic FROM game_skills');
+  const gamePics = await query('SELECT icon, main, background, logo FROM game_pics');
+  const whilePics = gamePics
+      .map(({icon, main, background, logo}) => [icon, main, background, logo])
+      .flat()
+      .concat(gameSkills.map(({pic}) => pic));
+  const files = await fs.promises.readdir('images');
+  const unlinkPromises = files
+      .filter((filename) => !whilePics.includes(filename))
+      .map((filename) => fs.promises.unlink(`images/${filename}`));
+  await Promise.all(unlinkPromises);
+  await query('TRUNCATE TABLE auth');
+  await query('TRUNCATE TABLE users CASCADE');
+  // await query('TRUNCATE TABLE trainers');
+  // await query('TRUNCATE TABLE streamers');
+  // await query('TRUNCATE TABLE user_games');
   await query('ALTER SEQUENCE users_id_seq RESTART');
 }
 
@@ -129,8 +141,10 @@ function addTrainer(id, gameId) {
  */
 export async function fill(length) {
   await clean();
-  await addPrepared();
-  for (let i = 0; i < length; i++) {
-    addUser();
+  if (length > 0) {
+    await addPrepared();
+  }
+  for (let i = 1; i < length; i++) {
+    await addUser();
   }
 }
