@@ -63,9 +63,6 @@ async function clean() {
   await Promise.all(unlinkPromises);
   await query('TRUNCATE TABLE auth');
   await query('TRUNCATE TABLE users CASCADE');
-  // await query('TRUNCATE TABLE trainers');
-  // await query('TRUNCATE TABLE streamers');
-  // await query('TRUNCATE TABLE user_games');
   await query('ALTER SEQUENCE users_id_seq RESTART');
 }
 
@@ -74,12 +71,11 @@ async function clean() {
  */
 async function addPrepared() {
   const email = 'admin@ffplayer.pro';
-  const name = 'Admin';
   const pic = uuid();
   const url = faker.internet.avatar();
-  const gameId = faker.random.number(2) + 1;
+  const gameId = 1;
   saveImage(url, pic);
-  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
+  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, 'Admin', pic);
   await query('INSERT INTO trainers(users_id, rank, rate, games_id) VALUES($1, $2, $3, $4)', id, 'TOP', 1.23, gameId);
   await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
   const codeHash = await auth.hash('admin');
