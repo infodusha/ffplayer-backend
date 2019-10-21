@@ -33,7 +33,7 @@ function getImageByUrl(url) {
  * @return {boolean} is probable
  */
 function probability(percent) {
-  return (faker.random.number(100) + 1) <= percent;
+  return (faker.random.number(99) + 1) <= percent;
 }
 
 /**
