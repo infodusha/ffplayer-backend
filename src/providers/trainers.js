@@ -11,38 +11,48 @@ import {query} from '../services/db.js';
  */
 export function getTrainers(rank, streamer, game, offset, length) {
   if (game === null) {
-    return query(`SELECT
-        users.id,
-        name,
-        pic,
-        MAX(rank) AS rank,
-        AVG(rate) as rate,
-        BOOL_OR(coalesce(streamers.users_id::bool, false)) AS streamer
-        FROM trainers
-        JOIN users ON users.id = trainers.users_id
-        LEFT JOIN streamers ON users.id = streamers.users_id AND streamers.games_id = trainers.games_id
-        GROUP BY users.id, users.name, users.pic
-        HAVING
-        MAX(rank) = coalesce($1, MAX(rank))
-        AND BOOL_OR(coalesce(streamers.users_id::bool, false)) = 
-          coalesce($2::boolean, BOOL_OR(coalesce(streamers.users_id::bool, false)))
-        ORDER BY AVG(rate) DESC
+    return query(`SELECT * FROM (
+          SELECT
+            users.id,
+            name,
+            pic,
+            MAX(rank) AS rank,
+            AVG(rate) as rate,
+            BOOL_OR(COALESCE(streamers.users_id, 0) > 0) AS streamer
+          FROM trainers
+            JOIN users ON
+              users.id = trainers.users_id
+            LEFT JOIN streamers ON
+              users.id = streamers.users_id
+              AND streamers.games_id = trainers.games_id
+          GROUP BY users.id, users.name, users.pic
+        ) AS trainers
+        WHERE
+          rank = COALESCE($1, rank)
+          AND streamer = COALESCE($2::boolean, streamer)
+        ORDER BY rate DESC
         OFFSET $3
         LIMIT $4`, rank, streamer, offset, length);
   }
-  return query(`SELECT
-      users.id,
-      name,
-      pic,
-      rank,
-      rate,
-      coalesce(streamers.users_id::bool, false) AS streamer
-      FROM trainers
-      JOIN users ON users.id = trainers.users_id AND trainers.games_id = $5
-      LEFT JOIN streamers ON users.id = streamers.users_id AND streamers.games_id = $5
+  return query(`SELECT * FROM (
+        SELECT
+          users.id,
+          name,
+          pic,
+          rank,
+          rate,
+          COALESCE(streamers.users_id, 0) > 0 AS streamer
+        FROM trainers
+        JOIN users ON
+          users.id = trainers.users_id
+          AND trainers.games_id = $5
+        LEFT JOIN streamers ON
+          users.id = streamers.users_id
+          AND streamers.games_id = $5
+      ) AS trainers
       WHERE
-      rank = coalesce($1, rank)
-      AND coalesce(streamers.users_id::bool, false) = coalesce($2::boolean, coalesce(streamers.users_id::bool, false))
+        rank = COALESCE($1, rank)
+        AND streamer = COALESCE($2::boolean, streamer)
       ORDER BY rate DESC
       OFFSET $3
       LIMIT $4`, rank, streamer, offset, length, game);
