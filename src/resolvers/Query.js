@@ -1,7 +1,6 @@
-import {query} from '../services/db.js';
 import {validate} from '../services/validation.js';
-import {getTrainers} from '../providers/trainers.js';
 import {getToken} from '../providers/token.js';
+import {getGame, getNews, getGames, getTrainers, getUser} from '../providers/Query.js';
 
 export default {
   Query: {
@@ -23,19 +22,16 @@ export default {
         validator().number().greaterThanOrEqual(0).check(offset);
         validator().number().greaterThan(0).check(length);
       });
-      return query('SELECT id, title, text, date FROM news ORDER BY date DESC OFFSET $1 LIMIT $2', offset, length);
+      return getNews(offset, length);
     },
     games() {
-      return query('SELECT id, name, shortname, description, tags, site FROM games ORDER BY id');
+      return getGames();
     },
-    async user(parent, {id}) {
-      const [data] = await query('SELECT id, pic, name FROM users WHERE id = $1', id);
-      return data;
+    user(parent, {id}) {
+      return getUser(id);
     },
-    async game(parent, {shortname}) {
-      const [game] = await query(`SELECT id, name, shortname, description, tags, site
-          FROM games WHERE shortname = $1`, shortname);
-      return game;
+    game(parent, {shortname}) {
+      return getGame(shortname);
     },
   },
 };

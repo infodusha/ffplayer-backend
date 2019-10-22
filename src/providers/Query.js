@@ -1,6 +1,45 @@
 import {query} from '../services/db.js';
 
 /**
+ * Get game by shortname
+ * @param {string} shortname
+ * @return {any} game
+ */
+export async function getGame(shortname) {
+  const [game] = await query(`SELECT id, name, shortname, description, tags, site
+        FROM games WHERE shortname = $1`, shortname);
+  return game;
+}
+
+/**
+ * Get news
+ * @param {number} offset
+ * @param {number} length
+ * @return {Promise<Array<any>>} news
+ */
+export function getNews(offset, length) {
+  return query('SELECT id, title, text, date FROM news ORDER BY date DESC OFFSET $1 LIMIT $2', offset, length);
+}
+
+/**
+ * Get games
+ * @return {Promise<Array<any>>} games
+ */
+export function getGames() {
+  return query('SELECT id, name, shortname, description, tags, site FROM games ORDER BY id');
+}
+
+/**
+ * Get user by id
+ * @param {number} id
+ * @return {any} user
+ */
+export async function getUser(id) {
+  const [data] = await query('SELECT id, pic, name FROM users WHERE id = $1', id);
+  return data;
+}
+
+/**
  * Get filtered trainers
  * @param {Number} rank
  * @param {Boolean} streamer

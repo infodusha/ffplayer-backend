@@ -1,13 +1,12 @@
-import {query} from '../services/db.js';
+import {getSkills, getPics} from '../providers/Game.js';
 
 export default {
   Game: {
-    async pics({id}) {
-      const [pics] = await query('SELECT icon, main, background, logo FROM game_pics WHERE games_id = $1', id);
-      return pics;
+    pics({id}) {
+      return getPics(id);
     },
     skills({id}) {
-      return query('SELECT name, pic FROM game_skills WHERE games_id = $1', id);
+      return getSkills(id);
     },
   },
 };
