@@ -35,7 +35,29 @@ export function getGames() {
  * @return {any} user
  */
 export async function getUser(id) {
-  const [data] = await query('SELECT id, pic, name FROM users WHERE id = $1', id);
+  const [data] = await query(`SELECT
+      id,
+      pic,
+      name,
+      rank,
+      rate,
+      streamer
+      FROM
+      users
+      LEFT JOIN
+      (SELECT
+        trainers.users_id,
+        MAX(rank) AS rank,
+        AVG(rate) as rate,
+        BOOL_OR(COALESCE(streamers.users_id, 0) > 0) AS streamer
+        FROM trainers
+        LEFT JOIN streamers ON
+          trainers.users_id = streamers.users_id
+          AND streamers.games_id = trainers.games_id
+        GROUP BY trainers.users_id
+      ) AS trainers ON trainers.users_id = id
+      WHERE
+      id = $1`, id);
   return data;
 }
 
@@ -52,7 +74,7 @@ export function getTrainers(rank, streamer, game, offset, length) {
   if (game === null) {
     return query(`SELECT * FROM (
           SELECT
-            users.id,
+            id,
             name,
             pic,
             MAX(rank) AS rank,
@@ -75,7 +97,7 @@ export function getTrainers(rank, streamer, game, offset, length) {
   }
   return query(`SELECT * FROM (
         SELECT
-          users.id,
+          id,
           name,
           pic,
           rank,
