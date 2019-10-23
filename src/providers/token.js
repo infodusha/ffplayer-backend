@@ -7,7 +7,7 @@ import {getCode} from './code.js';
  * Get user id and add user if needed
  * @param {string} email
  * @param {string} name
- * @return {number} id
+ * @return {Promise<number>} id
  */
 async function getId(email, name) {
   const [user] = await query('SELECT id FROM users WHERE email = $1', email);
@@ -29,7 +29,7 @@ async function getId(email, name) {
  * @param {string} email
  * @param {string} code
  * @param {string} ip
- * @return {string} token
+ * @return {Promise<string>} token
  */
 export async function getToken(name, email, code, ip) {
   const authDB = await getCode(email);

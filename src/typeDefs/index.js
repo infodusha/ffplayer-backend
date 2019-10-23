@@ -8,6 +8,7 @@ import Trainer from './Trainer.js';
 import Query from './Query.js';
 import Mutation from './Mutation.js';
 import Game from './Game.js';
+import Review from './Review.js';
 
 export default [
   scalars,
@@ -16,8 +17,9 @@ export default [
   ...interfaces,
   News,
   User,
-  Trainer,
   Game,
+  Review,
+  Trainer,
   Query,
   Mutation,
 ];

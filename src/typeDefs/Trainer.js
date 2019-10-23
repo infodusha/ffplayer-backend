@@ -9,5 +9,6 @@ export default apollo.gql`
     rank: Rank!
     streamer: Boolean
     games: [Game]
+    reviews: [Review]
   }
 `;

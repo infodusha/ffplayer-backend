@@ -3,7 +3,7 @@ import {query} from '../services/db.js';
 /**
  * Get game by shortname
  * @param {string} shortname
- * @return {any} game
+ * @return {Promise<any>} game
  */
 export async function getGame(shortname) {
   const [game] = await query(`SELECT id, name, shortname, description, tags, site
@@ -32,7 +32,7 @@ export function getGames() {
 /**
  * Get user by id
  * @param {number} id
- * @return {any} user
+ * @return {Promise<any>} user
  */
 export async function getUser(id) {
   const [data] = await query(`SELECT

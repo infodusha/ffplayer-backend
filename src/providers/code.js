@@ -6,7 +6,7 @@ import * as mail from '../services/mail.js';
 /**
  * Get code from database
  * @param {string} email
- * @return {string} code
+ * @return {Promise<string>} code
  */
 export async function getCode(email) {
   const codes = await query('SELECT code, attempts FROM auth WHERE email = $1 AND expires > NOW()', email);
@@ -42,7 +42,7 @@ async function save(email, code) {
 /**
  * Test coditions, generate, send, save code
  * @param {string} email
- * @return {boolean} user has name
+ * @return {Promise<boolean>} user has name
  */
 export async function postCode(email) {
   const authDB = await getCode(email);
