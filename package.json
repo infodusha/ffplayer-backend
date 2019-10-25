@@ -24,7 +24,7 @@
     "url": "https://github.com/infodusha/ffplayer-backend/issues"
   },
   "devDependencies": {
-    "eslint": "^6.5.1",
+    "eslint": "^6.6.0",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^1.19.4",
     "pm2": "^4.1.2"
