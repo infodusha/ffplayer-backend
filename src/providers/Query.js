@@ -40,7 +40,7 @@ export async function getUser(id) {
       pic,
       name,
       rank,
-      rate,
+      (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = $1) AS rate,
       streamer
       FROM
       users
@@ -48,7 +48,6 @@ export async function getUser(id) {
       (SELECT
         trainers.users_id,
         MAX(rank) AS rank,
-        AVG(rate) as rate,
         BOOL_OR(COALESCE(streamers.users_id, 0) > 0) AS streamer
         FROM trainers
         LEFT JOIN streamers ON
@@ -72,13 +71,19 @@ export async function getUser(id) {
  */
 export function getTrainers(rank, streamer, game, offset, length) {
   if (game === null) {
-    return query(`SELECT * FROM (
+    return query(`SELECT
+          id,
+          name,
+          pic,
+          (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = id) AS rate,
+          rank,
+          streamer
+        FROM (
           SELECT
             id,
             name,
             pic,
             MAX(rank) AS rank,
-            AVG(rate) as rate,
             BOOL_OR(COALESCE(streamers.users_id, 0) > 0) AS streamer
           FROM trainers
             JOIN users ON
@@ -95,13 +100,19 @@ export function getTrainers(rank, streamer, game, offset, length) {
         OFFSET $3
         LIMIT $4`, rank, streamer, offset, length);
   }
-  return query(`SELECT * FROM (
+  return query(`SELECT
+        id,
+        name,
+        pic,
+        (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = id AND games_id = $5) AS rate,
+        rank,
+        streamer
+      FROM (
         SELECT
           id,
           name,
           pic,
           rank,
-          rate,
           COALESCE(streamers.users_id, 0) > 0 AS streamer
         FROM trainers
         JOIN users ON

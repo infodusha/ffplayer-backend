@@ -75,11 +75,15 @@ async function addPrepared() {
   const gameId = 1;
   saveImage(url, pic);
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, 'Admin', pic);
-  await query('INSERT INTO trainers(users_id, rank, rate, games_id) VALUES($1, $2, $3, $4)', id, 'TOP', 1.23, gameId);
+  await query('INSERT INTO trainers(users_id, rank, games_id) VALUES($1, $2, $3)', id, 'TOP', gameId);
   await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
   const codeHash = await auth.hash('admin');
   await query('INSERT INTO auth (email, code, attempts, expires) VALUES ($1, $2, $3, $4::timestamptz)',
       email, codeHash, 100, '2050-04-04 20:00:00');
+  await query(`INSERT INTO reviews(users_id, trainers_id, rate, title, text, date, games_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7)`, id, id, 4, 'Отзыв 1', 'Текст 1', '2019-10-05 02:00:00+03', gameId);
+  await query(`INSERT INTO reviews(users_id, trainers_id, rate, title, text, date, games_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7)`, id, id, 1, 'Отзыв 2', 'Текст 2', '2019-7-15 01:00:00+03', gameId);
 }
 
 /**
@@ -98,6 +102,9 @@ async function addUser() {
     await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
     if (probability(70)) {
       await addTrainer(id, gameId);
+      if (probability(70)) {
+        await addReview(id, gameId);
+      }
       if (probability(50)) {
         let gameId2 = faker.random.number(2) + 1;
         do {
@@ -105,6 +112,9 @@ async function addUser() {
         } while (gameId2 === gameId);
         await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId2);
         await addTrainer(id, gameId2);
+        if (probability(70)) {
+          await addReview(id, gameId2);
+        }
         if (probability(50)) {
           await query('INSERT INTO streamers(users_id, games_id) VALUES($1, $2)', id, gameId2);
         }
@@ -124,10 +134,23 @@ async function addUser() {
  */
 function addTrainer(id, gameId) {
   const rank = faker.random.arrayElement(['TOP', 'MASTER', 'EXPERT']);
-  const rate = Number((faker.random.number() / faker.random.number()).toFixed(2));
-  return query('INSERT INTO trainers(users_id, rank, rate, games_id) VALUES($1, $2, $3, $4)', id, rank, rate, gameId);
+  return query('INSERT INTO trainers(users_id, rank, games_id) VALUES($1, $2, $3)', id, rank, gameId);
 }
 
+/**
+ * Adds random review
+ * @param {Number} id user id
+ * @param {Number} gameId
+ * @return {Promise} Added
+ */
+function addReview(id, gameId) {
+  const rate = faker.random.number(4) + 1;
+  const title = faker.lorem.word();
+  const text = faker.lorem.sentence();
+  const date = faker.date.past();
+  return query(`INSERT INTO reviews(users_id, trainers_id, rate, title, text, date, games_id)
+      VALUES($1, $2, $3, $4, $5, $6, $7)`, id, id, rate, title, text, date, gameId);
+}
 
 /**
  * Fill users with random data
