@@ -102,6 +102,7 @@ export function getTrainers(rank, streamer, game, offset, length) {
   }
   return query(`SELECT
         id,
+        games_id,
         name,
         pic,
         (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = id AND games_id = $5) AS rate,
@@ -110,6 +111,7 @@ export function getTrainers(rank, streamer, game, offset, length) {
       FROM (
         SELECT
           id,
+          trainers.games_id,
           name,
           pic,
           rank,

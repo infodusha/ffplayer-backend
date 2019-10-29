@@ -6,6 +6,7 @@ export default apollo.gql`
     pic: String!
     name: String!
     rate: Float
+    rateData: RateData
     rank: Rank!
     streamer: Boolean
     games: [Game]

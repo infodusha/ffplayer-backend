@@ -17,3 +17,16 @@ export function getTrainerReviews(id) {
       WHERE
         trainers_id = $1`, id);
 }
+
+/**
+ * Get trainer rate data
+ * @param {number} id
+ * @param {number} gamesId
+ * @return {Promise<any>} rate data
+ */
+export function getTrainerRateData(id, gamesId) {
+  if (gamesId === null) {
+    return {}; // TODO
+  }
+  return {}; // TODO
+}
