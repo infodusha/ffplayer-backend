@@ -52,13 +52,13 @@ async function saveImage(url, name) {
 async function clean() {
   const gameSkills = await query('SELECT pic FROM game_skills');
   const gamePics = await query('SELECT icon, main, background, logo FROM game_pics');
-  const whilePics = gamePics
+  const whitePics = gamePics
       .map(({icon, main, background, logo}) => [icon, main, background, logo])
       .flat()
       .concat(gameSkills.map(({pic}) => pic));
   const files = await fs.promises.readdir('images');
   const unlinkPromises = files
-      .filter((filename) => !whilePics.includes(filename))
+      .filter((filename) => !whitePics.includes(filename))
       .map((filename) => fs.promises.unlink(`images/${filename}`));
   await Promise.all(unlinkPromises);
   await query('TRUNCATE TABLE auth');
