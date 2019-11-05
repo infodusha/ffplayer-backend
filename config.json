@@ -26,5 +26,8 @@
     "host": "smtp.yandex.ru",
     "port": 465,
     "secure": true
+  },
+  "data": {
+    "picMimeTypes": ["image/png", "image/jpeg"]
   }
 }

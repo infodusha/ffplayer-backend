@@ -10,6 +10,7 @@ import Mutation from './Mutation.js';
 import Game from './Game.js';
 import Review from './Review.js';
 import RateData from './RateData.js';
+import SelfUpdate from './SelfUpdate.js';
 
 export default [
   scalars,
@@ -23,5 +24,6 @@ export default [
   Review,
   Trainer,
   Query,
+  SelfUpdate,
   Mutation,
 ];

@@ -7,5 +7,7 @@
   { "code": 13, "message": "Reached maximum attempts" },
   { "code": 14, "message": "Code expired" },
   { "code": 15, "message": "User already got code" },
-  { "code": 16, "message": "User not exists, name is necessarily" }
+  { "code": 16, "message": "User not exists, name is necessarily" },
+  { "code": 21, "message": "Provide any changes" },
+  { "code": 22, "message": "Pic mime type not valid" }
 ]
