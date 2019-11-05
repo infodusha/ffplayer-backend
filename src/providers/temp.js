@@ -80,10 +80,10 @@ async function addPrepared() {
   const codeHash = await auth.hash('admin');
   await query('INSERT INTO auth (email, code, attempts, expires) VALUES ($1, $2, $3, $4::timestamptz)',
       email, codeHash, 100, '2050-04-04 20:00:00');
-  await query(`INSERT INTO reviews(users_id, trainers_id, rate, title, text, date, games_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7)`, id, id, 4, 'Отзыв 1', 'Текст 1', '2019-10-05 02:00:00+03', gameId);
-  await query(`INSERT INTO reviews(users_id, trainers_id, rate, title, text, date, games_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7)`, id, id, 1, 'Отзыв 2', 'Текст 2', '2019-7-15 01:00:00+03', gameId);
+  await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
+      VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 1', 'Текст 1', '2019-10-05 02:00:00+03', gameId);
+  await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
+      VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 2', 'Текст 2', '2019-7-15 01:00:00+03', gameId);
 }
 
 /**
@@ -143,13 +143,28 @@ function addTrainer(id, gameId) {
  * @param {Number} gameId
  * @return {Promise} Added
  */
-function addReview(id, gameId) {
-  const rate = faker.random.number(4) + 1;
+async function addReview(id, gameId) {
   const title = faker.lorem.word();
   const text = faker.lorem.sentence();
   const date = faker.date.past();
-  return query(`INSERT INTO reviews(users_id, trainers_id, rate, title, text, date, games_id)
-      VALUES($1, $2, $3, $4, $5, $6, $7)`, id, id, rate, title, text, date, gameId);
+  const [{id: reviewId}] = await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
+      VALUES($1, $2, $3, $4, $5, $6) RETURNING id`, id, id, title, text, date, gameId);
+  const [{m}] = await query('SELECT MAX(id) AS m FROM votes');
+  for (let i = 1; i < (m + 1); i++) {
+    await addReviewVote(reviewId, i);
+  }
+}
+
+/**
+ * Adds random review vote
+ * @param {Number} id review id
+ * @param {Number} votesId
+ * @return {Promise} Added
+ */
+function addReviewVote(id, votesId) {
+  const value = faker.random.number(4) + 1;
+  return query(`INSERT INTO reviews_votes(reviews_id, value, votes_id)
+      VALUES($1, $2, $3)`, id, value, votesId);
 }
 
 /**
