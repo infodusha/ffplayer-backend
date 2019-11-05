@@ -83,17 +83,11 @@ export function getTrainerReviews(id) {
  * @param {number} gamesId
  * @return {Promise<any>} rate data
  */
-export function getTrainerRateData(id, gamesId) {
-  return Promise.all([
-    getRateDistribution(id, gamesId),
-    getRateVote(id, gamesId),
-  ]).then(([distribution, vote]) => {
-    const distributionCount = distribution.reduce((acc, d) => acc + d.count, 0);
-    return {
-      distribution: distribution
-          .map(({n, count}) => ({n, value: (count / distributionCount) * 100})),
-      vote: vote
-          .map(({question, value}) => ({question, value: Math.round(value)})),
-    };
-  });
+export async function getTrainerRateData(id, gamesId) {
+  const [distribution, vote] = await Promise.all([getRateDistribution(id, gamesId), getRateVote(id, gamesId)]);
+  const distributionCount = distribution.reduce((acc, d) => acc + d.count, 0);
+  return {
+    distribution: distribution.map(({n, count}) => ({n, value: (count / distributionCount) * 100})),
+    vote: vote.map(({question, value}) => ({question, value: Math.round(value)})),
+  };
 }
