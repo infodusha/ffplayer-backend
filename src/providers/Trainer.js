@@ -13,7 +13,7 @@ function getRateDistribution(id, gamesId) {
           COUNT(value)::int AS count
         FROM reviews
         LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
-        WHERE trainers_id = $1
+        WHERE trainers_id = $1 AND value IS NOT NULL
         GROUP BY n`, id);
   }
   return query(`SELECT
@@ -21,7 +21,7 @@ function getRateDistribution(id, gamesId) {
         COUNT(value)::int AS count
       FROM reviews
       LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
-      WHERE trainers_id = $1 AND reviews.games_id = $2
+      WHERE trainers_id = $1 AND value IS NOT NULL AND reviews.games_id = $2
       GROUP BY n`, id, gamesId);
 }
 
@@ -39,7 +39,7 @@ function getRateVote(id, gamesId) {
         FROM
         reviews_votes
         JOIN votes ON votes.id = reviews_votes.votes_id
-        JOIN reviews ON reviews.id=  reviews_votes.reviews_id
+        JOIN reviews ON reviews.id = reviews_votes.reviews_id
         WHERE reviews.trainers_id = $1
         GROUP BY question`, id);
   }
@@ -49,7 +49,7 @@ function getRateVote(id, gamesId) {
       FROM
       reviews_votes
       JOIN votes ON votes.id = reviews_votes.votes_id
-      JOIN reviews ON reviews.id=  reviews_votes.reviews_id
+      JOIN reviews ON reviews.id = reviews_votes.reviews_id
       WHERE reviews.trainers_id = $1 AND reviews.games_id = $2
       GROUP BY question`, id, gamesId);
 }
