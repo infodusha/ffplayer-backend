@@ -6,16 +6,21 @@ import {query} from '../services/db.js';
  * @return {Promise<Array<any>>} reviews
  */
 export function getTrainerReviews(id) {
-  return query(`SELECT
-        users_id AS id,
-        (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = $1) AS rate,
-        title,
-        text,
-        date
+  return query(`SELECT *
       FROM
-        reviews
-      WHERE
-        trainers_id = $1`, id);
+        (SELECT
+          trainers_id,
+          users_id AS id,
+          title,
+          text,
+          date,
+          COALESCE(AVG(value), 0) AS rate
+        FROM reviews
+        LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
+        GROUP BY reviews.id
+        )
+      AS reviews
+      WHERE trainers_id = $1`, id);
 }
 
 /**

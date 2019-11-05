@@ -40,7 +40,19 @@ export async function getUser(id) {
       pic,
       name,
       rank,
-      (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = $1) AS rate,
+      (SELECT
+        AVG(rate)
+        FROM
+        (SELECT
+          trainers_id,
+          COALESCE(AVG(value), 0) AS rate
+          FROM reviews
+          LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
+          GROUP BY reviews.id
+        ) AS reviews
+        GROUP BY trainers_id
+        HAVING trainers_id = $1
+      ) AS rate,
       streamer
       FROM
       users
@@ -75,7 +87,19 @@ export function getTrainers(rank, streamer, game, offset, length) {
           id,
           name,
           pic,
-          (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = id) AS rate,
+          (SELECT
+            AVG(rate)
+            FROM
+            (SELECT
+              trainers_id,
+              COALESCE(AVG(value), 0) AS rate
+              FROM reviews
+              LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
+              GROUP BY reviews.id
+            ) AS reviews
+            GROUP BY trainers_id
+            HAVING trainers_id = id
+          ) AS rate,
           rank,
           streamer
         FROM (
@@ -105,7 +129,20 @@ export function getTrainers(rank, streamer, game, offset, length) {
         games_id,
         name,
         pic,
-        (SELECT COALESCE(AVG(rate), 0) FROM reviews WHERE trainers_id = id AND games_id = $5) AS rate,
+        (SELECT
+          AVG(rate)
+          FROM
+          (SELECT
+            trainers_id,
+            COALESCE(AVG(value), 0) AS rate
+            FROM reviews
+            LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
+            GROUP BY reviews.id
+          ) AS reviews
+          GROUP BY trainers_id
+          HAVING trainers_id = id
+          AND games_id = $5
+        ) AS rate,
         rank,
         streamer
       FROM (
