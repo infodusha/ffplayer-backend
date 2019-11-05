@@ -47,6 +47,7 @@
     "watch": [
       "src/*",
       "config.json",
+      "errors.json",
       ".env"
     ]
   },
