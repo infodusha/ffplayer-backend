@@ -4,20 +4,20 @@ import {getGame, getNews, getGames, getTrainers, getUser} from '../providers/Que
 
 export default {
   Query: {
-    trainers(parent, {rank = null, streamer = null, game = null, offset = 0, length}) {
+    trainers(_, {rank = null, streamer = null, game = null, offset = 0, length}) {
       validate((validator) => {
         validator().number().greaterThanOrEqual(0).check(offset);
         validator().number().greaterThan(0).check(length);
       });
       return getTrainers(rank, streamer, game, offset, length);
     },
-    token(parent, {name, email, code}, {ip}) {
+    token(_, {name, email, code}, {ip}) {
       validate((validator) => {
         validator().string().includes('@').check(email);
       });
       return getToken(name, email, code, ip);
     },
-    news(parent, {offset = 0, length}) {
+    news(_, {offset = 0, length}) {
       validate((validator) => {
         validator().number().greaterThanOrEqual(0).check(offset);
         validator().number().greaterThan(0).check(length);
@@ -27,10 +27,13 @@ export default {
     games() {
       return getGames();
     },
-    user(parent, {id}) {
+    user(_, {id}) {
       return getUser(id);
     },
-    game(parent, {shortname}) {
+    self(_, __, {user}) {
+      return getUser(user.id);
+    },
+    game(_, {shortname}) {
       return getGame(shortname);
     },
   },

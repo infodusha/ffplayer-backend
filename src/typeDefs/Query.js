@@ -7,6 +7,7 @@ export default apollo.gql`
     news(offset: Int, length: Int!): [News]
     games: [Game]
     user(id: ID!): Client
+    self: Client @auth
     game(shortname: String!): Game
   }
 `;
