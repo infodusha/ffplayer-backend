@@ -31,6 +31,7 @@ export default {
       return getUser(id);
     },
     self(_, __, {user}) {
+      console.log(user.id, typeof user.id);
       return getUser(user.id);
     },
     game(_, {shortname}) {
