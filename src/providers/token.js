@@ -15,7 +15,8 @@ async function getId(email, name) {
     if (!name) {
       throw new ApolloError('User not exists, name is necessarily');
     }
-    return query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
+    const [user] = await query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
+    return user.id;
   }
   if (name) {
     throw new ApolloError('User already exists, name is unnecessarily');
