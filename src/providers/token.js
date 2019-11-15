@@ -2,6 +2,7 @@ import {ApolloError} from '../services/error.js';
 import {query} from '../services/db.js';
 import * as auth from '../services/auth.js';
 import {getCode} from './code.js';
+import {saveRandomPic} from '../services/gravatar.js';
 
 /**
  * Get user id and add user if needed
@@ -15,7 +16,8 @@ async function getId(email, name) {
     if (!name) {
       throw new ApolloError('User not exists, name is necessarily');
     }
-    const [user] = await query('INSERT INTO users(email, name) VALUES($1, $2) RETURNING id', email, name);
+    const pic = await saveRandomPic(email);
+    const [user] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
     return user.id;
   }
   if (name) {
