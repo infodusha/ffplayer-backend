@@ -15,7 +15,7 @@ function getImageByUrl(url) {
     https.request(url, (response) => {
       const data = new Stream.Transform();
 
-      response.on('data', function(chunk) {
+      response.on('data', (chunk) => {
         data.push(chunk);
       });
 
