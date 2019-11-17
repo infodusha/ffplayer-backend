@@ -39,9 +39,20 @@ async function updateSelfPic(id, file) {
  */
 async function updateSelfData(id, name, email) {
   if (name !== null || email !== null) {
-    await query('UPDATE users SET name = COALESCE($2, name), email = COALESCE($3, email) WHERE id = $1', id, name, email);
+    const [{name, email}] = await query(`UPDATE users
+        SET name = COALESCE($2, name),
+        email = COALESCE($3, email)
+        WHERE id = $1
+        RETURNING name, email`, id, name, email);
+    return {name, email};
+  } else {
+    const [{name, email}] = await query(`SELECT
+        name,
+        email
+        FROM users
+        WHERE id = $1`, id);
+    return {name, email};
   }
-  return {name, email};
 }
 
 /**
