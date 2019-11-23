@@ -1,6 +1,6 @@
 apps:
   - script: node
-    args: --experimental-modules --no-warnings ./src/index.js
+    args: --experimental-json-modules --no-warnings ./src/index.js
     name: backend
     env:
       NODE_ENV: development
