@@ -32,11 +32,9 @@ function getImageByUrl(url) {
  * @return {Promise<String>} pic
  */
 export async function saveRandomPic(email) {
-  const params = Object.keys(config.gavatar.params)
-      .map((key) => `${key}=${encodeURIComponent(config.gavatar.params[key])}`)
-      .join('&');
+  const params = new URLSearchParams(config.gavatar.params);
   const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
-  const data = await getImageByUrl(`${config.gavatar.url}${hash}?${params}`);
+  const data = await getImageByUrl(`${config.gavatar.url}${hash}?${params.toString()}`);
   const pic = uuid();
   await fs.promises.writeFile(`images/${pic}`, data);
   return pic;
