@@ -34,7 +34,7 @@ function getImageByUrl(url) {
 export async function saveRandomPic(email) {
   const params = new URLSearchParams(config.gavatar.params);
   const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
-  const data = await getImageByUrl(`${config.gavatar.url}${hash}?${params.toString()}`);
+  const data = await getImageByUrl(`${config.gavatar.url}${hash}?${params}`);
   const pic = uuid();
   await fs.promises.writeFile(`images/${pic}`, data);
   return pic;
