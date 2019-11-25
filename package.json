@@ -24,10 +24,10 @@
     "url": "https://github.com/infodusha/ffplayer-backend/issues"
   },
   "devDependencies": {
-    "eslint": "^6.7.0",
+    "eslint": "^6.7.1",
     "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.1",
-    "pm2": "^4.1.2"
+    "pm2": "^4.2.0"
   },
   "dependencies": {
     "apollo-server-express": "^2.9.12",
