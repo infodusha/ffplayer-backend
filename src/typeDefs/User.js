@@ -6,5 +6,6 @@ export default apollo.gql`
     pic: String!
     name: String!
     games: [Game]
+    reviews: [Review]
   }
 `;
