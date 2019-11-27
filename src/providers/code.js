@@ -3,6 +3,8 @@ import {query} from '../services/db.js';
 import * as auth from '../services/auth.js';
 import * as mail from '../services/mail.js';
 
+export const codes = new Map();
+
 /**
  * Get code from database
  * @param {string} email
@@ -45,15 +47,15 @@ async function save(email, code) {
  * @return {Promise<boolean>} user has name
  */
 export async function postCode(email) {
-  const authDB = await getCode(email);
-  if (authDB !== null) {
+  const authCode = codes.get(email);
+  if (authCode !== null) {
     throw new ApolloError('User already got code');
   }
   const code = await auth.code();
   const [inUsers] = await Promise.all([
     query('SELECT id from users WHERE email = $1', email),
     send(email, code),
-    save(email, code),
   ]);
+  codes.set(email, {code, attempts: 0, expires: Date.now()});
   return Boolean(inUsers.length);
 }

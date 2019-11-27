@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
-import crypto from 'crypto';
 
 const cfg = {
   key: null,
@@ -67,21 +66,6 @@ export function verify(token) {
         reject(err);
       } else {
         resolve(data);
-      }
-    });
-  });
-}
-
-/**
- * Generate random code
- */
-export async function code() {
-  return new Promise((resole, reject) => {
-    crypto.randomBytes(3, (err, buf) => {
-      if (err) {
-        reject(err);
-      } else {
-        resole(buf.toString('hex').toUpperCase());
       }
     });
   });
