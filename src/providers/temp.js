@@ -1,31 +1,7 @@
 import {query} from '../services/db.js';
 import faker from 'faker';
-import uuid from 'uuid/v4.js';
-import https from 'https';
-import Stream from 'stream';
 import fs from 'fs';
-import * as auth from '../services/auth.js';
-
-/**
- * Get image from url
- * @param {string} url
- * @return {Promise<Blob>} image
- */
-function getImageByUrl(url) {
-  return new Promise((resolve, reject) => {
-    https.request(url, (response) => {
-      const data = new Stream.Transform();
-
-      response.on('data', (chunk) => {
-        data.push(chunk);
-      });
-
-      response.on('end', () => {
-        resolve(data.read());
-      });
-    }).end();
-  });
-}
+import {saveRandomPic} from '../services/gravatar.js';
 
 /**
  * Get probability
@@ -34,16 +10,6 @@ function getImageByUrl(url) {
  */
 function probability(percent) {
   return (faker.random.number(99) + 1) <= percent;
-}
-
-/**
- * Save image to fs
- * @param {string} url
- * @param {string} name
- */
-async function saveImage(url, name) {
-  const picData = await getImageByUrl(url);
-  fs.promises.writeFile('images/' + name, picData);
 }
 
 /**
@@ -61,7 +27,6 @@ async function clean() {
       .filter((filename) => !whitePics.includes(filename))
       .map((filename) => fs.promises.unlink(`images/${filename}`));
   await Promise.all(unlinkPromises);
-  await query('TRUNCATE TABLE auth');
   await query('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
 }
 
@@ -70,16 +35,11 @@ async function clean() {
  */
 async function addPrepared() {
   const email = 'admin@ffplayer.pro';
-  const pic = uuid();
-  const url = faker.internet.avatar();
   const gameId = 1;
-  saveImage(url, pic);
+  const pic = await saveRandomPic(email);
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, 'Admin', pic);
   await query('INSERT INTO trainers(users_id, rank, games_id) VALUES($1, $2, $3)', id, 'TOP', gameId);
   await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
-  const codeHash = await auth.hash('admin');
-  await query('INSERT INTO auth (email, code, attempts, expires) VALUES ($1, $2, $3, $4::timestamptz)',
-      email, codeHash, 100, '2050-04-04 20:00:00');
   await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
       VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 1', 'Текст 1', '2019-10-05 02:00:00+03', gameId);
   await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
@@ -93,9 +53,7 @@ async function addPrepared() {
 async function addUser() {
   const email = faker.internet.email();
   const name = faker.name.findName();
-  const pic = uuid();
-  const url = faker.internet.avatar();
-  saveImage(url, pic);
+  const pic = await saveRandomPic(email);
   const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
   if (probability(80)) {
     const gameId = faker.random.number(2) + 1;

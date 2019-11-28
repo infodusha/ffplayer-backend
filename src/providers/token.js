@@ -1,7 +1,7 @@
 import {ApolloError} from '../services/error.js';
 import {query} from '../services/db.js';
 import * as auth from '../services/auth.js';
-import {getCode} from './code.js';
+import {codes} from './code.js';
 import {saveRandomPic} from '../services/gravatar.js';
 
 /**
@@ -35,19 +35,16 @@ async function getId(email, name) {
  * @return {Promise<string>} token
  */
 export async function getToken(name, email, code, ip) {
-  const authDB = await getCode(email);
-  if (authDB === null) {
+  if (!codes.has(email)) {
     throw new ApolloError('Code expired');
   }
-  if (authDB.attempts <= 0) {
+  if (!codes.hasAttempts(email)) {
     throw new ApolloError('Reached maximum attempts');
   }
-  const correct = await auth.compare(code, authDB.code);
+  const correct = await codes.check(email, code);
   if (!correct) {
-    await query('UPDATE auth SET attempts = attempts - 1 WHERE email = $1', email);
     throw new ApolloError('Code not correct');
   }
   const id = await getId(email, name);
-  await query('DELETE FROM auth WHERE email = $1', email);
   return auth.sign({id, ip});
 }

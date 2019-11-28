@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import auth from './auth.js';
+import * as auth from './auth.js';
 
 /**
  * Generate random code
@@ -17,7 +17,7 @@ async function generate() {
 }
 
 /**
- *
+ * Code generator
  */
 export class Coder {
   /**
@@ -29,6 +29,7 @@ export class Coder {
     this._items = new Map();
     this._interval = interval;
     this._attempts = attempts;
+    this._cleaner();
   }
 
   /**
@@ -74,6 +75,19 @@ export class Coder {
   }
 
   /**
+   * Has attempts
+   * @param {String} email
+   * @return {Boolean}
+   */
+  hasAttempts(email) {
+    const item = this._items.get(email);
+    if (item) {
+      return item.expires >= Date.now() && item.attempts > 0;
+    }
+    return false;
+  }
+
+  /**
    * Check code for email
    * @param {String} email
    * @param {String} code
@@ -83,6 +97,7 @@ export class Coder {
     if (item && item.expires >= Date.now() && item.attempts > 0) {
       const codeCorrect = await auth.compare(code, item.code);
       if (codeCorrect) {
+        this._items.delete(email);
         return true;
       }
       this._items.set(email, {...item, attempts: item.attempts - 1});
