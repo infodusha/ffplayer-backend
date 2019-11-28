@@ -1,11 +1,9 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import {createHash} from 'crypto';
 import fs from 'fs';
+import config from '../../config.json';
 
-const cfg = {
-  key: null,
-  saltRounds: null,
-};
+let authKey = null;
 
 /**
  * Configure auth service
@@ -13,28 +11,26 @@ const cfg = {
  * @return {Promise} service configured
  */
 export async function configure(config) {
-  cfg.saltRounds = config.saltRounds;
-  cfg.key = await fs.promises.readFile(config.key, {encoding: 'utf8'});
+  authKey = await fs.promises.readFile(config.key, {encoding: 'utf8'});
 }
 
 /**
  * Get hash for string
- * @param {string} string
- * @return {Promise<string>} hash
+ * @param {string} str
+ * @return {string} hash
  */
-export async function hash(string) {
-  const salt = await bcrypt.genSalt(cfg.saltRounds);
-  return bcrypt.hash(string, salt);
+export function hash(str) {
+  return createHash(config.auth.algorithm).update(str).digest('hex');
 }
 
 /**
  * Copmare string and hash
- * @param {string} string
- * @param {string} hash
- * @return {Promise<Boolean>} is hash from string
+ * @param {string} str
+ * @param {string} hashStr
+ * @return {Boolean} is hash from string
  */
-export function compare(string, hash) {
-  return bcrypt.compare(string, hash);
+export function compare(str, hashStr) {
+  return hash(str) === hashStr;
 }
 
 /**
@@ -44,7 +40,7 @@ export function compare(string, hash) {
  */
 export function sign(data) {
   return new Promise((resolve, reject) => {
-    jwt.sign(data, cfg.key, {algorithm: 'RS256'}, (err, token) => {
+    jwt.sign(data, authKey, {algorithm: 'RS256'}, (err, token) => {
       if (err) {
         reject(err);
       } else {
@@ -61,7 +57,7 @@ export function sign(data) {
  */
 export function verify(token) {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, cfg.key, {algorithms: ['RS256']}, (err, data) => {
+    jwt.verify(token, authKey, {algorithms: ['RS256']}, (err, data) => {
       if (err) {
         reject(err);
       } else {

@@ -8,10 +8,6 @@
 [vscode]: <https://code.visualstudio.com/>
 [gitscm]: <https://git-scm.com/>
 
-# Run once
-`npm install -g --production windows-build-tools --vs2015`
-`npm install -g node-gyp`
-
 # Visual Studio Code Extenstions
 - [ESLint][eslint]
 

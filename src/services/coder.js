@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import * as auth from './auth.js';
+import {hash, compare} from './auth.js';
 
 /**
  * Generate random code
@@ -52,7 +52,7 @@ export class Coder {
    */
   async add(email) {
     const code = await generate();
-    const codeHash = await auth.hash(code);
+    const codeHash = hash(code);
     this._items.set(email, {
       code: codeHash,
       expires: Date.now() + this._lifetime,
@@ -95,8 +95,7 @@ export class Coder {
   async check(email, code) {
     const item = this._items.get(email);
     if (item && item.expires >= Date.now() && item.attempts > 0) {
-      const codeCorrect = await auth.compare(code, item.code);
-      if (codeCorrect) {
+      if (compare(code, item.code)) {
         this._items.delete(email);
         return true;
       }

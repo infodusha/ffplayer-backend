@@ -1,7 +1,7 @@
 {
   "auth": {
     "key": "../ssl/cert.key",
-    "saltRounds": 10,
+    "algorithm": "sha256",
     "code": {
       "lifetime": 300000,
       "attempts": 5
