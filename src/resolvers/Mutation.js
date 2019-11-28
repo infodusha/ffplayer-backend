@@ -9,7 +9,7 @@ export default {
       validate((validator) => {
         validator().string().includes('@').check(email);
       });
-      return postCode(email);
+      return postCode(email.toLowerCase());
     },
     self(_, {pic = null, name = null, email = null}, {user}) {
       if (pic === null && name === null && email === null) {
@@ -20,7 +20,7 @@ export default {
           validator().string().includes('@').check(email);
         });
       }
-      return updateSelf(user.id, pic, name, email);
+      return updateSelf(user.id, pic, name, email.toLowerCase());
     },
   },
 };

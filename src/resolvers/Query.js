@@ -15,7 +15,7 @@ export default {
       validate((validator) => {
         validator().string().includes('@').check(email);
       });
-      return getToken(name, email, code, ip);
+      return getToken(name, email.toLowerCase(), code.toUpperCase(), ip);
     },
     news(_, {offset = 0, length}) {
       validate((validator) => {
