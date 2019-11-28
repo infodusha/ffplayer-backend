@@ -22,12 +22,12 @@ async function generate() {
 export class Coder {
   /**
    * Create new code generator
-   * @param {Number} interval
+   * @param {Number} lifetime
    * @param {Number} attempts
    */
-  constructor(interval, attempts) {
+  constructor(lifetime, attempts) {
     this._items = new Map();
-    this._interval = interval;
+    this._lifetime = lifetime;
     this._attempts = attempts;
     this._cleaner();
   }
@@ -42,7 +42,7 @@ export class Coder {
         this._items.delete(email);
       }
     }
-    setTimeout(this._cleaner.bind(this), this._interval);
+    setTimeout(this._cleaner.bind(this), this._lifetime);
   }
 
   /**
@@ -55,7 +55,7 @@ export class Coder {
     const codeHash = await auth.hash(code);
     this._items.set(email, {
       code: codeHash,
-      expires: Date.now() + this._interval,
+      expires: Date.now() + this._lifetime,
       attempts: this._attempts,
     });
     return code;

@@ -2,8 +2,10 @@ import {ApolloError} from '../services/error.js';
 import {query} from '../services/db.js';
 import * as mail from '../services/mail.js';
 import {Coder} from '../services/coder.js';
+import config from '../../config.json';
 
-export const codes = new Coder(300000, 5);
+const {lifetime, attempts} = config.auth.code;
+export const codes = new Coder(lifetime, attempts);
 
 /**
  * Send code

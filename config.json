@@ -1,7 +1,11 @@
 {
   "auth": {
     "key": "../ssl/cert.key",
-    "saltRounds": 10
+    "saltRounds": 10,
+    "code": {
+      "lifetime": 300000,
+      "attempts": 5
+    }
   },
   "apollo": {
     "playground": true,
