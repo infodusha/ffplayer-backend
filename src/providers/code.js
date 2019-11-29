@@ -3,6 +3,7 @@ import {query} from '../services/db.js';
 import * as mail from '../services/mail.js';
 import {Coder} from '../services/coder.js';
 import config from '../../config.json';
+import {hash} from '../services/auth.js';
 
 const {lifetime, attempts} = config.auth.code;
 export const codes = new Coder(lifetime, attempts);
@@ -28,12 +29,13 @@ function send(email, code) {
  * @return {Promise<boolean>} user has name
  */
 export async function postCode(email) {
-  if (codes.has(email)) {
+  const emailHash = hash(email);
+  if (codes.has(emailHash)) {
     throw new ApolloError('User already got code');
   }
-  const code = await codes.add(email);
+  const code = await codes.add(emailHash);
   const [inUsers] = await Promise.all([
-    query('SELECT id from users WHERE email = $1', email),
+    query('SELECT id from users WHERE email = $1', emailHash),
     send(email, code),
   ]);
   return Boolean(inUsers.length);

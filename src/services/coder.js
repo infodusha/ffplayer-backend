@@ -37,24 +37,23 @@ export class Coder {
    */
   _cleaner() {
     const now = Date.now();
-    for (const [email, {expires}] of this._items.entries()) {
+    for (const [id, {expires}] of this._items.entries()) {
       if (expires <= now) {
-        this._items.delete(email);
+        this._items.delete(id);
       }
     }
     setTimeout(this._cleaner.bind(this), this._lifetime);
   }
 
   /**
-   * Add email
-   * @param {String} email
+   * Add
+   * @param {String} id
    * @return {Promise<String>} code
    */
-  async add(email) {
+  async add(id) {
     const code = await generate();
-    const codeHash = hash(code);
-    this._items.set(email, {
-      code: codeHash,
+    this._items.set(id, {
+      code: hash(code),
       expires: Date.now() + this._lifetime,
       attempts: this._attempts,
     });
@@ -62,12 +61,12 @@ export class Coder {
   }
 
   /**
-   * Has email
-   * @param {String} email
+   * Has
+   * @param {String} id
    * @return {Boolean}
    */
-  has(email) {
-    const item = this._items.get(email);
+  has(id) {
+    const item = this._items.get(id);
     if (item) {
       return item.expires >= Date.now();
     }
@@ -76,11 +75,11 @@ export class Coder {
 
   /**
    * Has attempts
-   * @param {String} email
+   * @param {String} id
    * @return {Boolean}
    */
-  hasAttempts(email) {
-    const item = this._items.get(email);
+  hasAttempts(id) {
+    const item = this._items.get(id);
     if (item) {
       return item.expires >= Date.now() && item.attempts > 0;
     }
@@ -88,18 +87,19 @@ export class Coder {
   }
 
   /**
-   * Check code for email
-   * @param {String} email
+   * Check code for id
+   * @param {String} id
    * @param {String} code
+   * @return {Boolean} correct
    */
-  async check(email, code) {
-    const item = this._items.get(email);
+  check(id, code) {
+    const item = this._items.get(id);
     if (item && item.expires >= Date.now() && item.attempts > 0) {
       if (compare(code, item.code)) {
-        this._items.delete(email);
+        this._items.delete(id);
         return true;
       }
-      this._items.set(email, {...item, attempts: item.attempts - 1});
+      this._items.set(id, {...item, attempts: item.attempts - 1});
     }
     return false;
   }

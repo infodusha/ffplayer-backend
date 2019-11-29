@@ -2,6 +2,8 @@ import {query} from '../services/db.js';
 import faker from 'faker';
 import fs from 'fs';
 import {saveRandomPic} from '../services/gravatar.js';
+import {hash} from '../services/auth.js';
+import {codes} from './code.js';
 
 /**
  * Get probability
@@ -34,16 +36,22 @@ async function clean() {
  * Adds our prepared users
  */
 async function addPrepared() {
-  const email = 'admin@ffplayer.pro';
+  const emailHash = hash('admin@ffplayer.pro');
   const gameId = 1;
-  const pic = await saveRandomPic(email);
-  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, 'Admin', pic);
+  const pic = await saveRandomPic(emailHash);
+  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', emailHash, 'Admin', pic);
   await query('INSERT INTO trainers(users_id, rank, games_id) VALUES($1, $2, $3)', id, 'TOP', gameId);
   await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
   await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
       VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 1', 'Текст 1', '2019-10-05 02:00:00+03', gameId);
   await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
       VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 2', 'Текст 2', '2019-7-15 01:00:00+03', gameId);
+  codes._items.clear();
+  codes._items.set(emailHash, {
+    code: hash('ADMIN'),
+    expires: Date.now() + 10000000,
+    attempts: 20,
+  });
 }
 
 /**
@@ -52,9 +60,10 @@ async function addPrepared() {
  */
 async function addUser() {
   const email = faker.internet.email();
+  const emailHash = hash(email);
   const name = faker.name.findName();
-  const pic = await saveRandomPic(email);
-  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
+  const pic = await saveRandomPic(emailHash);
+  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', emailHash, name, pic);
   if (probability(80)) {
     const gameId = faker.random.number(2) + 1;
     await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
