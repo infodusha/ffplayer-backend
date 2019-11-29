@@ -1,7 +1,7 @@
 import https from 'https';
-import fs from 'fs';
-import Stream from 'stream';
-import crypto from 'crypto';
+import {promises as fs} from 'fs';
+import {Transform} from 'stream';
+import {createHash} from 'crypto';
 import config from '../../config.json';
 import uuid from 'uuid/v4.js';
 
@@ -13,7 +13,7 @@ import uuid from 'uuid/v4.js';
 function getImageByUrl(url) {
   return new Promise((resolve, reject) => {
     https.request(url, (response) => {
-      const data = new Stream.Transform();
+      const data = new Transform();
 
       response.on('data', (chunk) => {
         data.push(chunk);
@@ -33,9 +33,9 @@ function getImageByUrl(url) {
  */
 export async function saveRandomPic(email) {
   const params = new URLSearchParams(config.gavatar.params);
-  const hash = crypto.createHash('md5').update(email.toLowerCase()).digest('hex');
+  const hash = createHash('md5').update(email.toLowerCase()).digest('hex');
   const data = await getImageByUrl(`${config.gavatar.url}${hash}?${params}`);
   const pic = uuid();
-  await fs.promises.writeFile(`images/${pic}`, data);
+  await fs.writeFile(`images/${pic}`, data);
   return pic;
 }
