@@ -1,6 +1,6 @@
 import {ApolloError} from './services/error.js';
 import * as auth from './services/auth.js';
-import logger from './services/logger.js';
+import {logger} from './services/logger.js';
 
 /**
  * Create context
@@ -32,7 +32,7 @@ export async function createContext(ip, authorization) {
  * @param {{ req, connection }} context
  * @return {any} context
  */
-export default function context({req, connection}) {
+export function context({req, connection}) {
   if (connection) {
     return connection.context;
   }

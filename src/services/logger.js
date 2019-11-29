@@ -1,7 +1,7 @@
 import winston from 'winston';
 import config from '../../config.json';
 
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   level: config.logger.level,
   format: winston.format.json(),
   transports: [
@@ -15,5 +15,3 @@ if (process.env.NODE_ENV === 'development') {
     format: winston.format.simple(),
   }));
 }
-
-export default logger;

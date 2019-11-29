@@ -1,3 +1,3 @@
 import Rank from './Rank.js';
 
-export default [Rank];
+export const enums = [Rank];

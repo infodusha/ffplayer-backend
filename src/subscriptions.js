@@ -13,6 +13,6 @@ function onConnect(params, {upgradeReq}) {
   return createContext(ip, authorization);
 }
 
-export default {
+export const subscriptions = {
   onConnect,
 };

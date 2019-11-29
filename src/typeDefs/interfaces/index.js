@@ -1,3 +1,3 @@
 import Client from './Client.js';
 
-export default [Client];
+export const interfaces = [Client];

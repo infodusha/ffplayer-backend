@@ -1,3 +1,3 @@
 import auth from './auth.js';
 
-export default [auth];
+export const directives = [auth];

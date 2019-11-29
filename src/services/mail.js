@@ -1,6 +1,6 @@
 import mailer from 'nodemailer';
 import config from '../../config.json';
-import logger from './logger.js';
+import {logger} from './logger.js';
 
 const transport = mailer.createTransport({
   ...config.mail,

@@ -2,7 +2,7 @@ import http from 'http';
 import express from 'express';
 import apollo from 'apollo-server-express';
 import config from '../../config.json';
-import logger from './logger.js';
+import {logger} from './logger.js';
 import {fill} from '../providers/temp.js';
 import fs from 'fs';
 

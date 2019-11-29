@@ -7,7 +7,7 @@ import Mutation from './Mutation.js';
 import Game from './Game.js';
 import Review from './Review.js';
 
-export default {
+export const resolvers = {
   ...scalars,
   ...Client,
   ...Game,

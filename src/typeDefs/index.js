@@ -1,7 +1,7 @@
-import scalars from './scalars/index.js';
-import directives from './directives/index.js';
-import enums from './enums/index.js';
-import interfaces from './interfaces/index.js';
+import {scalars} from './scalars/index.js';
+import {directives} from './directives/index.js';
+import {enums} from './enums/index.js';
+import {interfaces} from './interfaces/index.js';
 import News from './News.js';
 import User from './User.js';
 import Trainer from './Trainer.js';
@@ -12,7 +12,7 @@ import Review from './Review.js';
 import RateData from './RateData.js';
 import SelfUpdate from './SelfUpdate.js';
 
-export default [
+export const typeDefs = [
   scalars,
   ...directives,
   ...enums,
