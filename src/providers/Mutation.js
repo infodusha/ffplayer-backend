@@ -1,5 +1,5 @@
 import {query} from '../services/db.js';
-import fs from 'fs';
+import {createWriteStream, promises as fs} from 'fs';
 import uuid from 'uuid/v4.js';
 import config from '../../config.json';
 import {ApolloError} from '../services/error.js';
@@ -16,7 +16,7 @@ async function updateSelfPic(id, file) {
     throw new ApolloError('Pic mime type not valid');
   }
   const newPic = uuid();
-  const writeStream = fs.createWriteStream(`images/${newPic}`, {flags: 'w'});
+  const writeStream = createWriteStream(`images/${newPic}`, {flags: 'w'});
   readStream.pipe(writeStream);
   await new Promise((resolve, reject) => {
     writeStream.on('error', reject);
@@ -24,7 +24,7 @@ async function updateSelfPic(id, file) {
   });
   const [{pic: oldPic}] = await query('SELECT pic FROM users WHERE id = $1', id);
   await query('UPDATE users SET pic = $2 WHERE id = $1', id, newPic);
-  await fs.promises.unlink(`images/${oldPic}`);
+  await fs.unlink(`images/${oldPic}`);
 }
 
 /**
