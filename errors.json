@@ -9,5 +9,12 @@
   { "code": 15, "message": "User already got code" },
   { "code": 16, "message": "User not exists, name is necessarily" },
   { "code": 21, "message": "Provide any changes" },
-  { "code": 22, "message": "Pic mime type not valid" }
+  { "code": 22, "message": "Pic mime type not valid" },
+  { "code": 23, "message": "Mails already got codes" },
+  { "code": 24, "message": "Codes expired" },
+  { "code": 25, "message": "Codes reached maximum attempts" },
+  { "code": 26, "message": "Old code not correct" },
+  { "code": 27, "message": "New code not correct" },
+  { "code": 28, "message": "Old email is not correct" },
+  { "code": 29, "message": "Old and new emails must not match" }
 ]

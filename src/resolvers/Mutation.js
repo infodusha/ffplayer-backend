@@ -5,7 +5,7 @@ import {updateSelf, postEmailCode, updateEmail} from '../providers/Mutation.js';
 
 export default {
   Mutation: {
-    code(_, {email}, {ip}) {
+    code(_, {email}) {
       validate((validator) => {
         validator().string().includes('@').check(email);
       });
@@ -18,6 +18,9 @@ export default {
       return updateSelf(user.id, pic, name);
     },
     selfEmailCode(_, {oldEmail, newEmail}, {user}) {
+      if (oldEmail.toLowerCase() === newEmail.toLowerCase()) {
+        throw new ApolloError('Old and new emails must not match');
+      }
       validate((validator) => {
         validator().string().includes('@').check(oldEmail);
         validator().string().includes('@').check(newEmail);
