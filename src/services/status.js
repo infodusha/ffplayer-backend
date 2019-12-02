@@ -1,3 +1,7 @@
+import apollo from 'apollo-server-express';
+
+export const CHANGED_STATUS = 'CHANGED_STATUS';
+export const statusPubSub = new apollo.PubSub();
 const online = new Set();
 
 /**
@@ -11,6 +15,7 @@ export function setStatus(id, isOnline) {
   } else {
     online.delete(id);
   }
+  statusPubSub.publish(CHANGED_STATUS, {changedStatus: {id, online: isOnline}});
 }
 
 /**

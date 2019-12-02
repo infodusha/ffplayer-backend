@@ -11,6 +11,8 @@ import Game from './Game.js';
 import Review from './Review.js';
 import RateData from './RateData.js';
 import SelfUpdate from './SelfUpdate.js';
+import Subscription from './Subscription.js';
+import Status from './Status.js';
 
 export const typeDefs = [
   scalars,
@@ -26,4 +28,6 @@ export const typeDefs = [
   Query,
   SelfUpdate,
   Mutation,
+  Status,
+  Subscription,
 ];
