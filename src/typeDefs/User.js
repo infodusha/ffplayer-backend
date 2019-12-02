@@ -8,5 +8,6 @@ export default apollo.gql`
     games: [Game]
     reviews: [Review]
     trains: Int!
+    online: Boolean!
   }
 `;

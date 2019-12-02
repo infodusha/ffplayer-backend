@@ -13,5 +13,6 @@ export default apollo.gql`
     reviews: [Review]
     trains: Int!
     students: Int!
+    online: Boolean!
   }
 `;
