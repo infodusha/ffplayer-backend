@@ -7,5 +7,6 @@ export default apollo.gql`
     name: String!
     games: [Game]
     reviews: [Review]
+    trains: Int!
   }
 `;

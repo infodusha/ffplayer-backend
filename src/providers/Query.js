@@ -36,6 +36,8 @@ export function getGames() {
  */
 export async function getUser(id) {
   const [data] = await query(`SELECT
+      0 AS trains,
+      0 AS students,
       id,
       pic,
       name,
@@ -74,7 +76,7 @@ export async function getUser(id) {
 
 /**
  * Get filtered trainers
- * @param {Number} rank
+ * @param {String} rank
  * @param {Boolean} streamer
  * @param {Number} game
  * @param {Number} offset
@@ -84,6 +86,8 @@ export async function getUser(id) {
 export function getTrainers(rank, streamer, game, offset, length) {
   if (game === null) {
     return query(`SELECT
+          0 AS trains,
+          0 AS students,
           id,
           name,
           pic,
@@ -125,6 +129,8 @@ export function getTrainers(rank, streamer, game, offset, length) {
         LIMIT $4`, rank, streamer, offset, length);
   }
   return query(`SELECT
+        0 AS trains,
+        0 AS students,
         id,
         games_id,
         name,

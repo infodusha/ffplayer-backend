@@ -5,11 +5,13 @@ export default apollo.gql`
     id: ID!
     pic: String!
     name: String!
-    rate: Float
+    rate: Float!
     rateData: RateData
     rank: Rank!
-    streamer: Boolean
+    streamer: Boolean!
     games: [Game]
     reviews: [Review]
+    trains: Int!
+    students: Int!
   }
 `;
