@@ -1,5 +1,5 @@
 import {createContext} from './context.js';
-import {setStatus} from './services/status.js';
+import {setOnline, setOffline} from './services/status.js';
 
 export const subscriptions = {
   onConnect(_, {upgradeReq}) {
@@ -8,13 +8,13 @@ export const subscriptions = {
     const authorization = headers.authorization;
     const context = createContext(ip, authorization);
     if (context.user) {
-      setStatus(context.user.id, true);
+      setOnline(context.user.id);
     }
     return context;
   },
   onDisconnect(_, context) {
     if (context.user) {
-      setStatus(context.user.id, false);
+      setOffline(context.user.id, false);
     }
   },
 };
