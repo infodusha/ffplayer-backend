@@ -6,7 +6,7 @@ import {query} from '../services/db.js';
  * @return {Promise<Array<any>>} skills
  */
 export function getSkills(id) {
-  return query('SELECT name, pic FROM game_skills WHERE games_id = $1', id);
+  return query('SELECT name, pic FROM game_skills WHERE game_id = $1', id);
 }
 
 /**
@@ -15,6 +15,6 @@ export function getSkills(id) {
  * @return {Promise<any>} pics
  */
 export async function getPics(id) {
-  const [pics] = await query('SELECT icon, main, background, logo FROM game_pics WHERE games_id = $1', id);
+  const [pics] = await query('SELECT icon, main, background, logo FROM game_pics WHERE game_id = $1', id);
   return pics;
 }

@@ -11,13 +11,14 @@ import {saveRandomPic} from '../services/gravatar.js';
  * @return {Promise<number>} id
  */
 async function getId(email, name) {
-  const [user] = await query('SELECT id FROM users WHERE email = $1', email);
+  const [user] = await query('SELECT user_id AS id FROM users WHERE email = $1', email);
   if (!user) {
     if (!name) {
       throw new ApolloError('User not exists, name is necessarily');
     }
     const pic = await saveRandomPic(email);
-    const [user] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', email, name, pic);
+    const [user] = await query(`INSERT INTO users(email, name, pic)
+          VALUES($1, $2, $3) RETURNING user_id AS id`, email, name, pic);
     return user.id;
   }
   if (name) {

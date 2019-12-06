@@ -9,16 +9,16 @@ export function getUserReviews(id) {
   return query(`SELECT *
       FROM
         (SELECT
-          trainers_id AS id,
-          users_id,
+          trainer_id AS id,
+          user_id,
           title,
           text,
           date,
           COALESCE(AVG(value), 0) AS rate
         FROM reviews
-        LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
-        GROUP BY reviews.id
+        LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+        GROUP BY reviews.review_id
         )
       AS reviews
-      WHERE users_id = $1`, id);
+      WHERE user_id = $1`, id);
 }

@@ -1,6 +1,7 @@
 import {validate} from '../services/validation.js';
 import {getToken} from '../providers/token.js';
-import {getGame, getNews, getGames, getTrainers, getUser} from '../providers/Query.js';
+import {getGame, getNews, getGames, getTrainers} from '../providers/Query.js';
+import {getClient} from '../providers/client.js';
 
 export default {
   Query: {
@@ -28,10 +29,10 @@ export default {
       return getGames();
     },
     user(_, {id}) {
-      return getUser(id);
+      return getClient(id);
     },
     self(_, __, {user}) {
-      return getUser(user.id);
+      return getClient(user.id);
     },
     game(_, {shortname}) {
       return getGame(shortname);

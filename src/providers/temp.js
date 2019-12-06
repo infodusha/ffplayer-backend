@@ -39,12 +39,13 @@ async function addPrepared() {
   const emailHash = hash('admin@ffplayer.pro');
   const gameId = 1;
   const pic = await saveRandomPic(emailHash);
-  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', emailHash, 'Admin', pic);
-  await query('INSERT INTO trainers(users_id, rank, games_id) VALUES($1, $2, $3)', id, 'TOP', gameId);
-  await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
-  await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
+  const [{id}] = await query(`INSERT INTO users(email, name, pic) VALUES($1, $2, $3)
+        RETURNING user_id AS id`, emailHash, 'Admin', pic);
+  await query('INSERT INTO trainers(user_id, rank, game_id) VALUES($1, $2, $3)', id, 'TOP', gameId);
+  await query('INSERT INTO user_games(user_id, game_id) VALUES($1, $2)', id, gameId);
+  await query(`INSERT INTO reviews(user_id, trainer_id, title, text, date, game_id)
       VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 1', 'Текст 1', '2019-10-05 02:00:00+03', gameId);
-  await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
+  await query(`INSERT INTO reviews(user_id, trainer_id, title, text, date, game_id)
       VALUES($1, $2, $3, $4, $5, $6)`, id, id, 'Отзыв 2', 'Текст 2', '2019-7-15 01:00:00+03', gameId);
   codes._items.clear();
   codes._items.set(emailHash, {
@@ -63,10 +64,11 @@ async function addUser() {
   const emailHash = hash(email);
   const name = faker.name.findName();
   const pic = await saveRandomPic(emailHash);
-  const [{id}] = await query('INSERT INTO users(email, name, pic) VALUES($1, $2, $3) RETURNING id', emailHash, name, pic);
+  const [{id}] = await query(`INSERT INTO users(email, name, pic) VALUES($1, $2, $3)
+        RETURNING user_id AS id`, emailHash, name, pic);
   if (probability(80)) {
     const gameId = faker.random.number(2) + 1;
-    await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId);
+    await query('INSERT INTO user_games(user_id, game_id) VALUES($1, $2)', id, gameId);
     if (probability(70)) {
       await addTrainer(id, gameId);
       if (probability(70)) {
@@ -77,18 +79,18 @@ async function addUser() {
         do {
           gameId2 = faker.random.number(2) + 1;
         } while (gameId2 === gameId);
-        await query('INSERT INTO user_games(users_id, games_id) VALUES($1, $2)', id, gameId2);
+        await query('INSERT INTO user_games(user_id, game_id) VALUES($1, $2)', id, gameId2);
         await addTrainer(id, gameId2);
         if (probability(70)) {
           await addReview(id, gameId2);
         }
         if (probability(50)) {
-          await query('INSERT INTO streamers(users_id, games_id) VALUES($1, $2)', id, gameId2);
+          await query('INSERT INTO streamers(user_id, game_id) VALUES($1, $2)', id, gameId2);
         }
       }
     }
     if (probability(50)) {
-      await query('INSERT INTO streamers(users_id, games_id) VALUES($1, $2)', id, gameId);
+      await query('INSERT INTO streamers(user_id, game_id) VALUES($1, $2)', id, gameId);
     }
   }
 }
@@ -101,7 +103,7 @@ async function addUser() {
  */
 function addTrainer(id, gameId) {
   const rank = faker.random.arrayElement(['TOP', 'MASTER', 'EXPERT']);
-  return query('INSERT INTO trainers(users_id, rank, games_id) VALUES($1, $2, $3)', id, rank, gameId);
+  return query('INSERT INTO trainers(user_id, rank, game_id) VALUES($1, $2, $3)', id, rank, gameId);
 }
 
 /**
@@ -114,9 +116,9 @@ async function addReview(id, gameId) {
   const title = faker.lorem.word();
   const text = faker.lorem.sentence();
   const date = faker.date.past();
-  const [{id: reviewId}] = await query(`INSERT INTO reviews(users_id, trainers_id, title, text, date, games_id)
-      VALUES($1, $2, $3, $4, $5, $6) RETURNING id`, id, id, title, text, date, gameId);
-  const [{m}] = await query('SELECT MAX(id) AS m FROM votes');
+  const [{id: reviewId}] = await query(`INSERT INTO reviews(user_id, trainer_id, title, text, date, game_id)
+      VALUES($1, $2, $3, $4, $5, $6) RETURNING review_id AS id`, id, id, title, text, date, gameId);
+  const [{m}] = await query('SELECT MAX(vote_id) AS m FROM votes');
   for (let i = 1; i < (m + 1); i++) {
     await addReviewVote(reviewId, i);
   }
@@ -130,7 +132,7 @@ async function addReview(id, gameId) {
  */
 function addReviewVote(id, votesId) {
   const value = faker.random.number(4) + 1;
-  return query(`INSERT INTO reviews_votes(reviews_id, value, votes_id)
+  return query(`INSERT INTO reviews_votes(review_id, value, vote_id)
       VALUES($1, $2, $3)`, id, value, votesId);
 }
 

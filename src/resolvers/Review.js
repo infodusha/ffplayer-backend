@@ -1,9 +1,9 @@
-import {getUser} from '../providers/Review.js';
+import {getClient} from '../providers/client.js';
 
 export default {
-  Trainer: {
+  Review: {
     user({id}) {
-      return getUser(id);
+      return getClient(id);
     },
   },
 };

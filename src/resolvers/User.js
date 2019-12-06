@@ -1,11 +1,11 @@
-import {getUserGames} from '../providers/client.js';
+import {getClientGames} from '../providers/client.js';
 import {getUserReviews} from '../providers/User.js';
 import {isOnline} from '../services/status.js';
 
 export default {
   User: {
     games({id}) {
-      return getUserGames(id);
+      return getClientGames(id);
     },
     reviews({id}) {
       return getUserReviews(id);

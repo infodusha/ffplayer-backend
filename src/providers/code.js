@@ -20,7 +20,7 @@ export async function postCode(email) {
   }
   const code = await codes.add(emailHash);
   const [inUsers] = await Promise.all([
-    query('SELECT id from users WHERE email = $1', emailHash),
+    query('SELECT user_id from users WHERE email = $1', emailHash),
     send({
       from: 'no-reply@ffplayer.pro',
       to: email,

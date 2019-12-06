@@ -12,16 +12,16 @@ function getRateDistribution(id, gamesId) {
           COALESCE(value, 0) AS n,
           COUNT(value)::int AS count
         FROM reviews
-        LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
-        WHERE trainers_id = $1 AND value IS NOT NULL
+        LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+        WHERE trainer_id = $1 AND value IS NOT NULL
         GROUP BY n`, id);
   }
   return query(`SELECT
         COALESCE(value, 0) AS n,
         COUNT(value)::int AS count
       FROM reviews
-      LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
-      WHERE trainers_id = $1 AND value IS NOT NULL AND reviews.games_id = $2
+      LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+      WHERE trainer_id = $1 AND value IS NOT NULL AND reviews.game_id = $2
       GROUP BY n`, id, gamesId);
 }
 
@@ -38,9 +38,9 @@ function getRateVote(id, gamesId) {
           question
         FROM
         reviews_votes
-        JOIN votes ON votes.id = reviews_votes.votes_id
-        JOIN reviews ON reviews.id = reviews_votes.reviews_id
-        WHERE reviews.trainers_id = $1
+        JOIN votes ON votes.vote_id = reviews_votes.vote_id
+        JOIN reviews ON reviews.review_id = reviews_votes.review_id
+        WHERE reviews.trainer_id = $1
         GROUP BY question`, id);
   }
   return query(`SELECT
@@ -48,9 +48,9 @@ function getRateVote(id, gamesId) {
         question
       FROM
       reviews_votes
-      JOIN votes ON votes.id = reviews_votes.votes_id
-      JOIN reviews ON reviews.id = reviews_votes.reviews_id
-      WHERE reviews.trainers_id = $1 AND reviews.games_id = $2
+      JOIN votes ON votes.vote_id = reviews_votes.vote_id
+      JOIN reviews ON reviews.review_id = reviews_votes.review_id
+      WHERE reviews.trainer_id = $1 AND reviews.game_id = $2
       GROUP BY question`, id, gamesId);
 }
 
@@ -63,18 +63,18 @@ export function getTrainerReviews(id) {
   return query(`SELECT *
       FROM
         (SELECT
-          trainers_id,
-          users_id AS id,
+          trainer_id,
+          user_id AS id,
           title,
           text,
           date,
           COALESCE(AVG(value), 0) AS rate
         FROM reviews
-        LEFT JOIN reviews_votes ON reviews_votes.reviews_id = reviews.id
-        GROUP BY reviews.id
+        LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+        GROUP BY reviews.review_id
         )
       AS reviews
-      WHERE trainers_id = $1`, id);
+      WHERE trainer_id = $1`, id);
 }
 
 /**

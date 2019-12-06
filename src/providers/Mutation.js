@@ -28,8 +28,8 @@ async function updateSelfPic(id, file) {
     writeStream.on('error', reject);
     writeStream.on('close', resolve);
   });
-  const [{pic: oldPic}] = await query('SELECT pic FROM users WHERE id = $1', id);
-  await query('UPDATE users SET pic = $2 WHERE id = $1', id, newPic);
+  const [{pic: oldPic}] = await query('SELECT pic FROM users WHERE user_id = $1', id);
+  await query('UPDATE users SET pic = $2 WHERE user_id = $1', id, newPic);
   await fs.unlink(`images/${oldPic}`);
 }
 
@@ -42,7 +42,7 @@ async function updateSelfPic(id, file) {
  */
 export async function updateSelf(id, pic, name) {
   if (name !== null) {
-    await query(`UPDATE users SET name = $2 WHERE id = $1`, id, name);
+    await query(`UPDATE users SET name = $2 WHERE user_id = $1`, id, name);
   }
   if (pic !== null) {
     await updateSelfPic(id, pic);
@@ -59,7 +59,7 @@ export async function updateSelf(id, pic, name) {
  */
 export async function postEmailCode(id, oldEmail, newEmail) {
   const oldEmailHash = hash(oldEmail);
-  const [{email}] = await query(`SELECT email FROM users WHERE id = $1`, id);
+  const [{email}] = await query(`SELECT email FROM users WHERE user_id = $1`, id);
   if (email !== oldEmailHash) {
     throw new ApolloError('Old email is not correct');
   }
@@ -96,7 +96,7 @@ export async function postEmailCode(id, oldEmail, newEmail) {
  */
 export async function updateEmail(id, oldEmail, newEmail, oldCode, newCode) {
   const oldEmailHash = hash(oldEmail);
-  const [{email}] = await query(`SELECT email FROM users WHERE id = $1`, id);
+  const [{email}] = await query(`SELECT email FROM users WHERE user_id = $1`, id);
   if (email !== oldEmailHash) {
     throw new ApolloError('Old email is not correct');
   }
@@ -115,6 +115,6 @@ export async function updateEmail(id, oldEmail, newEmail, oldCode, newCode) {
   if (!newCorrect) {
     throw new ApolloError('New code not correct');
   }
-  await query(`UPDATE users SET email = $2 WHERE id = $1`, id, newEmailHash);
+  await query(`UPDATE users SET email = $2 WHERE user_id = $1`, id, newEmailHash);
   return true;
 }
