@@ -12,7 +12,7 @@ function getRateDistribution(id, gamesId) {
           COALESCE(value, 0) AS n,
           COUNT(value)::int AS count
         FROM reviews
-        LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+        LEFT JOIN review_votes ON review_votes.review_id = reviews.review_id
         WHERE trainer_id = $1 AND value IS NOT NULL
         GROUP BY n`, id);
   }
@@ -20,7 +20,7 @@ function getRateDistribution(id, gamesId) {
         COALESCE(value, 0) AS n,
         COUNT(value)::int AS count
       FROM reviews
-      LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+      LEFT JOIN review_votes ON review_votes.review_id = reviews.review_id
       WHERE trainer_id = $1 AND value IS NOT NULL AND reviews.game_id = $2
       GROUP BY n`, id, gamesId);
 }
@@ -37,9 +37,9 @@ function getRateVote(id, gamesId) {
           AVG(value) AS value,
           question
         FROM
-        reviews_votes
-        JOIN votes ON votes.vote_id = reviews_votes.vote_id
-        JOIN reviews ON reviews.review_id = reviews_votes.review_id
+        review_votes
+        JOIN votes ON votes.vote_id = review_votes.vote_id
+        JOIN reviews ON reviews.review_id = review_votes.review_id
         WHERE reviews.trainer_id = $1
         GROUP BY question`, id);
   }
@@ -47,9 +47,9 @@ function getRateVote(id, gamesId) {
         AVG(value) AS value,
         question
       FROM
-      reviews_votes
-      JOIN votes ON votes.vote_id = reviews_votes.vote_id
-      JOIN reviews ON reviews.review_id = reviews_votes.review_id
+      review_votes
+      JOIN votes ON votes.vote_id = review_votes.vote_id
+      JOIN reviews ON reviews.review_id = review_votes.review_id
       WHERE reviews.trainer_id = $1 AND reviews.game_id = $2
       GROUP BY question`, id, gamesId);
 }
@@ -70,7 +70,7 @@ export function getTrainerReviews(id) {
           date,
           COALESCE(AVG(value), 0) AS rate
         FROM reviews
-        LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+        LEFT JOIN review_votes ON review_votes.review_id = reviews.review_id
         GROUP BY reviews.review_id
         )
       AS reviews

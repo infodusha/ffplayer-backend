@@ -132,7 +132,7 @@ async function addReview(id, gameId) {
  */
 function addReviewVote(id, votesId) {
   const value = faker.random.number(4) + 1;
-  return query(`INSERT INTO reviews_votes(review_id, value, vote_id)
+  return query(`INSERT INTO review_votes(review_id, value, vote_id)
       VALUES($1, $2, $3)`, id, value, votesId);
 }
 

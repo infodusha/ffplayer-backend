@@ -16,7 +16,7 @@ export function getUserReviews(id) {
           date,
           COALESCE(AVG(value), 0) AS rate
         FROM reviews
-        LEFT JOIN reviews_votes ON reviews_votes.review_id = reviews.review_id
+        LEFT JOIN review_votes ON review_votes.review_id = reviews.review_id
         GROUP BY reviews.review_id
         )
       AS reviews
