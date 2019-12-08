@@ -26,6 +26,7 @@
   "devDependencies": {
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.18.2",
     "nodemon": "^2.0.1",
     "pm2": "^4.2.0"
   },

@@ -4,6 +4,8 @@ env:
 extends:
   - eslint:recommended
   - google
+  - plugin:import/errors
+  - plugin:import/warnings
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
@@ -18,3 +20,14 @@ rules:
     - error
     - code: 130
       comments: 150
+  import/no-commonjs:
+    - error
+  import/no-deprecated:
+    - error
+  import/extensions:
+    - error
+    - ignorePackages
+  import/order:
+    - error
+  import/no-default-export:
+    - warn
