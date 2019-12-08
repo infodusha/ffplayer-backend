@@ -1,6 +1,6 @@
 import {getClient} from '../providers/client.js';
 
-export default {
+export const Review = {
   Review: {
     user({id}) {
       return getClient(id);

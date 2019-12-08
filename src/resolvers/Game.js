@@ -1,6 +1,6 @@
 import {getSkills, getPics} from '../providers/Game.js';
 
-export default {
+export const Game = {
   Game: {
     pics({id}) {
       return getPics(id);

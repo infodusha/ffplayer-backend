@@ -1,6 +1,6 @@
 import apollo from 'apollo-server-express';
 
-export default apollo.gql`
+export const User = apollo.gql`
   type User implements Client {
     id: ID!
     pic: String!

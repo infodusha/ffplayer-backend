@@ -1,7 +1,7 @@
 import graphql from 'graphql';
 import language from 'graphql/language/index.js';
 
-export default {
+export const D8 = {
   Date: new graphql.GraphQLScalarType({
     name: 'Date',
     description: 'Date scalar type',

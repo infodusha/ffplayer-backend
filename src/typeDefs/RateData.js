@@ -1,6 +1,6 @@
 import apollo from 'apollo-server-express';
 
-export default apollo.gql`
+export const RateData = apollo.gql`
   type RateDistribution {
     value: Float
     n: Int

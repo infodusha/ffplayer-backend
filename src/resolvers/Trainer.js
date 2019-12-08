@@ -2,7 +2,7 @@ import {getClientGames} from '../providers/client.js';
 import {getTrainerReviews, getTrainerRateData} from '../providers/Trainer.js';
 import {isOnline} from '../services/status.js';
 
-export default {
+export const Trainer = {
   Trainer: {
     games({id}) {
       return getClientGames(id);

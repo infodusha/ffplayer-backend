@@ -3,7 +3,7 @@ import {postCode} from '../providers/code.js';
 import {ApolloError} from '../services/error.js';
 import {updateSelf, postEmailCode, updateEmail} from '../providers/Mutation.js';
 
-export default {
+export const Mutation = {
   Mutation: {
     code(_, {email}) {
       validate((validator) => {

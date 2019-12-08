@@ -1,5 +1,5 @@
-import {AuthDirective as auth} from './auth.js';
+import {Auth} from './auth.js';
 
 export const schemaDirectives = {
-  auth,
+  auth: Auth,
 };

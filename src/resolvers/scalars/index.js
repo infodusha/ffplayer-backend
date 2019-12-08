@@ -1,5 +1,5 @@
-import D8 from './Date.js';
+import {D8} from './D8.js';
 
-export default {
+export const scalars = {
   ...D8,
 };

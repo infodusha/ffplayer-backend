@@ -3,7 +3,7 @@ import {getToken} from '../providers/token.js';
 import {getGame, getNews, getGames, getTrainers} from '../providers/Query.js';
 import {getClient} from '../providers/client.js';
 
-export default {
+export const Query = {
   Query: {
     trainers(_, {rank = null, streamer = null, game = null, offset = 0, length}) {
       validate((validator) => {

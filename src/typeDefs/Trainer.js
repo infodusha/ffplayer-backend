@@ -1,6 +1,6 @@
 import apollo from 'apollo-server-express';
 
-export default apollo.gql`
+export const Trainer = apollo.gql`
   type Trainer implements Client {
     id: ID!
     pic: String!

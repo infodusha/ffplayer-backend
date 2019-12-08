@@ -1,3 +1,3 @@
-import Client from './Client.js';
+import {Client} from './Client.js';
 
 export const interfaces = [Client];
