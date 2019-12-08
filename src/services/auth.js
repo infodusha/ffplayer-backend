@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
 import {createHash} from 'crypto';
 import fs from 'fs';
+import jwt from 'jsonwebtoken';
 import config from '../../config.json';
 
 let authKey = null;

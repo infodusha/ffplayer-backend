@@ -5,7 +5,7 @@ import {ApolloError} from '../services/error.js';
 /**
  * Protects data by auth
  */
-export default class AuthDirective extends apollo.SchemaDirectiveVisitor {
+export class AuthDirective extends apollo.SchemaDirectiveVisitor {
   /**
    * Can be applyed on object
    * @param {any} type
