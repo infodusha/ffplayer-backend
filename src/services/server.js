@@ -4,7 +4,7 @@ import apollo from 'apollo-server-express';
 import config from '../../config.json';
 import {logger} from './logger.js';
 import {fill} from '../providers/temp.js';
-import fs from 'fs';
+import {promises as fs} from 'fs';
 
 /**
  * Create server
@@ -15,7 +15,7 @@ function create() {
 
   app.get('/image/:uuid', async (req, res) => {
     try {
-      const data = await fs.promises.readFile('images/' + req.params.uuid);
+      const data = await fs.readFile('images/' + req.params.uuid);
       res.end(data, 'binary');
     } catch {
       res.status(400).send('Bad Request');

@@ -1,5 +1,5 @@
 import {createHash} from 'crypto';
-import fs from 'fs';
+import {promises as fs} from 'fs';
 import jwt from 'jsonwebtoken';
 import config from '../../config.json';
 
@@ -11,7 +11,7 @@ let authKey = null;
  * @return {Promise} service configured
  */
 export async function configure(config) {
-  authKey = await fs.promises.readFile(config.key, {encoding: 'utf8'});
+  authKey = await fs.readFile(config.key, {encoding: 'utf8'});
 }
 
 /**

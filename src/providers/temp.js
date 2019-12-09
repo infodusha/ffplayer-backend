@@ -1,4 +1,4 @@
-import fs from 'fs';
+import {promises as fs} from 'fs';
 import faker from 'faker';
 import {query} from '../services/db.js';
 import {saveRandomPic} from '../services/gravatar.js';
@@ -24,10 +24,10 @@ async function clean() {
       .map(({icon, main, background, logo}) => [icon, main, background, logo])
       .flat()
       .concat(gameSkills.map(({pic}) => pic));
-  const files = await fs.promises.readdir('images');
+  const files = await fs.readdir('images');
   const unlinkPromises = files
       .filter((filename) => !whitePics.includes(filename))
-      .map((filename) => fs.promises.unlink(`images/${filename}`));
+      .map((filename) => fs.unlink(`images/${filename}`));
   await Promise.all(unlinkPromises);
   await query('TRUNCATE TABLE users RESTART IDENTITY CASCADE');
 }
