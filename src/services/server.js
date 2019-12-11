@@ -1,10 +1,10 @@
 import http from 'http';
+import {promises as fs} from 'fs';
 import express from 'express';
 import apollo from 'apollo-server-express';
 import config from '../../config.json';
-import {logger} from './logger.js';
 import {fill} from '../providers/temp.js';
-import {promises as fs} from 'fs';
+import {logger} from './logger.js';
 
 /**
  * Create server

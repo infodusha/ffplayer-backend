@@ -2,8 +2,8 @@ import https from 'https';
 import {promises as fs} from 'fs';
 import {Transform} from 'stream';
 import {createHash} from 'crypto';
-import config from '../../config.json';
 import uuid from 'uuid/v4.js';
+import config from '../../config.json';
 
 /**
  * Get image from url
