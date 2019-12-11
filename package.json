@@ -12,7 +12,9 @@
     "deploy:setup": "pm2 deploy process.yaml production setup",
     "deploy:revert": "pm2 deploy process.yaml production revert 1",
     "deploy:force": "pm2 deploy process.yaml production --force",
-    "deploy": "pm2 deploy process.yaml production"
+    "deploy": "pm2 deploy process.yaml production",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -24,9 +26,13 @@
     "url": "https://github.com/infodusha/ffplayer-backend/issues"
   },
   "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jest": "^23.1.1",
+    "jest": "^24.9.0",
     "nodemon": "^2.0.1",
     "pm2": "^4.2.1"
   },

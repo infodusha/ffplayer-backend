@@ -1,11 +1,13 @@
 env:
   node: true
   es6: true
+  jest/globals: true
 extends:
   - eslint:recommended
   - google
   - plugin:import/errors
   - plugin:import/warnings
+  - plugin:jest/recommended
 globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
