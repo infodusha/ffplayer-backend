@@ -1,8 +1,4 @@
-import {hash, compare, sign, configure} from './auth.js';
-
-beforeAll(() => {
-  return configure({key: '../ssl/cert.key'});
-});
+import {hash, compare, sign} from './auth.js';
 
 test('Hash works', () => {
   expect(compare('test', hash('test'))).toBeTruthy();

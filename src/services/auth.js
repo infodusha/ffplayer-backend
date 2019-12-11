@@ -3,15 +3,25 @@ import {promises as fs} from 'fs';
 import jwt from 'jsonwebtoken';
 import config from '../../config.json';
 
-let authKey = null;
-
 /**
- * Configure auth service
- * @param {any} config
- * @return {Promise} service configured
+ * Auth key storage
  */
-export async function configure(config) {
-  authKey = await fs.readFile(config.key, {encoding: 'utf8'});
+class AuthKey {
+  /**
+   * Get auth key
+   * @return {Promise<String>} key
+   */
+  static get() {
+    if (AuthKey.key) {
+      return Promise.resolve(AuthKey.key);
+    }
+    if (!AuthKey.loader) {
+      AuthKey.loader = fs
+          .readFile(config.auth.key, {encoding: 'utf8'})
+          .then((key) => AuthKey.key = key);
+    }
+    return AuthKey.loader;
+  }
 }
 
 /**
@@ -38,9 +48,10 @@ export function compare(str, hashStr) {
  * @param {any} data
  * @return {Promise<String>} signed data
  */
-export function sign(data) {
+export async function sign(data) {
+  const key = await AuthKey.get();
   return new Promise((resolve, reject) => {
-    jwt.sign(data, authKey, {algorithm: 'RS256'}, (err, token) => {
+    jwt.sign(data, key, {algorithm: 'RS256'}, (err, token) => {
       if (err) {
         reject(err);
       } else {
@@ -55,9 +66,10 @@ export function sign(data) {
  * @param {string} token
  * @return {Promise<any>} decoded data
  */
-export function verify(token) {
+export async function verify(token) {
+  const key = await AuthKey.get();
   return new Promise((resolve, reject) => {
-    jwt.verify(token, authKey, {algorithms: ['RS256']}, (err, data) => {
+    jwt.verify(token, key, {algorithms: ['RS256']}, (err, data) => {
       if (err) {
         reject(err);
       } else {
