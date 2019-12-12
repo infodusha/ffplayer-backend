@@ -9,7 +9,9 @@ describe('Auth service', () => {
     expect(compare('different', hash('test'))).toBe(false);
   });
 
-  it('Sign & verify data', () => sign({})
-      .then((token) => verify(token))
-      .then((data) => expect(data).toBeTruthy()));
+  it('Sign & verify data', () => expect(sign({}).then(verify))
+      .resolves.not.toThrow());
+
+  it('Throws when sign data is wrong typed', () => expect(sign(1))
+      .rejects.toThrow());
 });
