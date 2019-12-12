@@ -14,7 +14,8 @@
     "deploy:force": "pm2 deploy process.yaml production --force",
     "deploy": "pm2 deploy process.yaml production",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
