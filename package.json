@@ -60,5 +60,22 @@
   },
   "engines": {
     "node": ">=13.2.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "coverageReporters": [
+      "html"
+    ]
   }
 }
