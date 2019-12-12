@@ -1,11 +1,15 @@
-import {hash, compare, sign} from './auth.js';
+import {hash, compare, sign, verify} from './auth.js';
 
-test('Hash works', () => {
-  expect(compare('test', hash('test'))).toBeTruthy();
+describe('Auth service', () => {
+  it('Hash & compare values', () => {
+    expect(compare('test', hash('test'))).toBe(true);
+  });
+
+  it('Hash & not compare different values', () => {
+    expect(compare('different', hash('test'))).toBe(false);
+  });
+
+  it('Sign & verify data', () => sign({})
+      .then((token) => verify(token))
+      .then((data) => expect(data).toBeTruthy()));
 });
-
-test('Hash not compare different values', () => {
-  expect(compare('different', hash('test'))).toBeFalsy();
-});
-
-test('Sign works', () => expect(sign({})).resolves.not.toThrow());
