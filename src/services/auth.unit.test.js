@@ -12,6 +12,6 @@ describe('Auth service', () => {
   it('Sign & verify data', () => expect(sign({}).then(verify))
       .resolves.not.toThrow());
 
-  it('Throws when sign data is wrong typed', () => expect(sign(1))
+  it('Throws when token is wrong', () => expect(verify(''))
       .rejects.toThrow());
 });
