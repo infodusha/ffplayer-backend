@@ -1,9 +1,7 @@
-import {getClient} from '../providers/client.js';
-
 export const Review = {
   Review: {
-    user({id}) {
-      return getClient(id);
+    user({id}, _, {dataSources}) {
+      return dataSources.user.getById(id);
     },
   },
 };

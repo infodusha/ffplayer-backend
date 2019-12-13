@@ -8,7 +8,7 @@ import {typeDefs} from './typeDefs/index.js';
 import {resolvers} from './resolvers/index.js';
 import {context} from './context.js';
 import {subscriptions} from './subscriptions.js';
-
+import {dataSources} from './dataSources/index.js';
 
 (async () => {
   try {
@@ -19,6 +19,7 @@ import {subscriptions} from './subscriptions.js';
       schemaDirectives,
       context,
       subscriptions,
+      dataSources,
       playground: config.apollo.playground,
       debug: config.apollo.debug,
     });

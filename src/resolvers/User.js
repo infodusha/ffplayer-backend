@@ -1,14 +1,12 @@
-import {getClientGames} from '../providers/client.js';
-import {getUserReviews} from '../providers/User.js';
 import {isOnline} from '../services/status.js';
 
 export const User = {
   User: {
-    games({id}) {
-      return getClientGames(id);
+    games({id}, _, {dataSources}) {
+      return dataSources.user.games(id);
     },
-    reviews({id}) {
-      return getUserReviews(id);
+    reviews({id}, _, {dataSources}) {
+      return dataSources.user.reviews(id);
     },
     online({id}) {
       return isOnline(id);

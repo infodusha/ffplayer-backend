@@ -1,9 +1,9 @@
 import {promises as fs} from 'fs';
 import faker from 'faker';
-import {query} from '../services/db.js';
-import {saveRandomPic} from '../services/gravatar.js';
-import {hash} from '../services/auth.js';
-import {codes} from './code.js';
+import {query} from './services/db.js';
+import {saveRandomPic} from './services/gravatar.js';
+import {hash} from './services/auth.js';
+import {codes} from './providers/code.js';
 
 /**
  * Get probability

@@ -1,5 +1,4 @@
 import {ApolloError} from '../services/error.js';
-import {query} from '../services/db.js';
 import {send} from '../services/mail.js';
 import {Coder} from '../services/coder.js';
 import config from '../../config.json';
@@ -11,16 +10,17 @@ export const codes = new Coder(lifetime, attempts);
 /**
  * Test coditions, generate, send, save code
  * @param {string} email
+ * @param {{}} dataSources
  * @return {Promise<boolean>} user has name
  */
-export async function postCode(email) {
+export async function postCode(email, dataSources) {
   const emailHash = hash(email);
   if (codes.has(emailHash)) {
     throw new ApolloError('User already got code');
   }
   const code = await codes.add(emailHash);
   const [inUsers] = await Promise.all([
-    query('SELECT user_id from users WHERE email = $1', emailHash),
+    dataSources.user.getByEmail(emailHash),
     send({
       from: 'no-reply@ffplayer.pro',
       to: email,
@@ -28,5 +28,5 @@ export async function postCode(email) {
       text: 'Auth code: ' + code,
     }),
   ]);
-  return Boolean(inUsers.length);
+  return Boolean(inUsers);
 }

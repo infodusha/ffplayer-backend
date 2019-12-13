@@ -3,7 +3,7 @@ import {promises as fs} from 'fs';
 import express from 'express';
 import apollo from 'apollo-server-express';
 import config from '../../config.json';
-import {fill} from '../providers/temp.js';
+import {fill} from '../temp.js';
 import {logger} from './logger.js';
 
 /**

@@ -1,12 +1,10 @@
-import {getSkills, getPics} from '../providers/Game.js';
-
 export const Game = {
   Game: {
-    pics({id}) {
-      return getPics(id);
+    pics({id}, _, {dataSources}) {
+      return dataSources.game.pics(id);
     },
-    skills({id}) {
-      return getSkills(id);
+    skills({id}, _, {dataSources}) {
+      return dataSources.game.skills(id);
     },
   },
 };

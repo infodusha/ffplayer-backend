@@ -1,17 +1,15 @@
-import {getClientGames} from '../providers/client.js';
-import {getTrainerReviews, getTrainerRateData} from '../providers/Trainer.js';
 import {isOnline} from '../services/status.js';
 
 export const Trainer = {
   Trainer: {
-    games({id}) {
-      return getClientGames(id);
+    games({id}, _, {dataSources}) {
+      return dataSources.user.games(id);
     },
-    reviews({id}) {
-      return getTrainerReviews(id);
+    reviews({id}, _, {dataSources}) {
+      return dataSources.trainer.reviews(id);
     },
-    rateData({id, gamesId = null}) {
-      return getTrainerRateData(id, gamesId);
+    rateData({id, gamesId = null}, _, {dataSources}) {
+      return dataSources.trainer.rateData(id, gamesId);
     },
     online({id}) {
       return isOnline(id);

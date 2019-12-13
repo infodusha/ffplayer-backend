@@ -5,11 +5,11 @@ import {updateSelf, postEmailCode, updateEmail} from '../providers/Mutation.js';
 
 export const Mutation = {
   Mutation: {
-    code(_, {email}) {
+    code(_, {email}, {dataSources}) {
       validate((validator) => {
         validator().string().includes('@').check(email);
       });
-      return postCode(email.toLowerCase());
+      return postCode(email.toLowerCase(), dataSources);
     },
     self(_, {pic = null, name = null}, {user}) {
       if (pic === null && name === null) {
