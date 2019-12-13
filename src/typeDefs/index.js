@@ -1,7 +1,7 @@
 import {scalars} from './scalars/index.js';
 import {directives} from './directives/index.js';
 import {enums} from './enums/index.js';
-import {interfaces} from './interfaces/index.js';
+import {unions} from './unions/index.js';
 import {News} from './News.js';
 import {User} from './User.js';
 import {Trainer} from './Trainer.js';
@@ -17,7 +17,7 @@ export const typeDefs = [
   scalars,
   ...directives,
   ...enums,
-  ...interfaces,
+  ...unions,
   News,
   User,
   Game,

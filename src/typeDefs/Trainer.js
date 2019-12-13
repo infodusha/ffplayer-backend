@@ -1,7 +1,7 @@
 import apollo from 'apollo-server-express';
 
 export const Trainer = apollo.gql`
-  type Trainer implements Client {
+  type Trainer {
     id: ID!
     pic: String!
     name: String!
