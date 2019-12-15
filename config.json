@@ -21,7 +21,8 @@
     "server": {
       "port": 8080,
       "host": "localhost"
-    }
+    },
+    "maxQueryCost": 1000
   },
   "logger": {
     "level": "debug"

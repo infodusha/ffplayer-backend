@@ -8,6 +8,7 @@ import {resolvers} from './resolvers/index.js';
 import {context} from './context.js';
 import {subscriptions} from './subscriptions.js';
 import {dataSources} from './dataSources/index.js';
+import {validationRules} from './validationRules/index.js';
 
 (async () => {
   try {
@@ -18,6 +19,7 @@ import {dataSources} from './dataSources/index.js';
       context,
       subscriptions,
       dataSources,
+      validationRules,
       playground: config.apollo.playground,
       debug: config.apollo.debug,
     });
