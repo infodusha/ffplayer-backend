@@ -12,6 +12,8 @@ import {Review} from './Review.js';
 import {RateData} from './RateData.js';
 import {Subscription} from './Subscription.js';
 import {Status} from './Status.js';
+import {SelfTrainer} from './SelfTrainer.js';
+import {SelfUser} from './SelfUser.js';
 
 export const typeDefs = [
   scalars,
@@ -28,4 +30,6 @@ export const typeDefs = [
   Mutation,
   Status,
   Subscription,
+  SelfTrainer,
+  SelfUser,
 ];

@@ -30,7 +30,7 @@ export const Query = {
       return dataSources.user.getById(id);
     },
     self(_, __, {user, dataSources}) {
-      return dataSources.user.getById(user.id);
+      return dataSources.user.getSelfById(user.id);
     },
     game(_, {shortname}, {dataSources}) {
       return dataSources.game.getByShortname(shortname);

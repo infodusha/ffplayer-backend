@@ -103,4 +103,19 @@ export class User {
           VALUES($1, $2, $3) RETURNING user_id AS id`, emailHash, name, pic);
     return data;
   }
+
+  /**
+   * Get user & slef by id
+   * @param {Number} id
+   */
+  async getSelfById(id) {
+    const [data, notifications] = await Promise.all([
+      this.getById(id),
+      query(`SELECT id, type, date FROM notifications WHERE user_id = $1`, id),
+    ]);
+    return {
+      ...data,
+      notifications,
+    };
+  }
 }

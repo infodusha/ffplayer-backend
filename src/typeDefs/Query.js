@@ -7,7 +7,7 @@ export const Query = apollo.gql`
     news(offset: Int, length: Int!): [News]
     games: [Game]
     user(id: ID!): Client
-    self: Client @auth
+    self: SelfClient @auth
     game(shortname: String!): Game
   }
 `;
