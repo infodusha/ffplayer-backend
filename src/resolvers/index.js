@@ -7,6 +7,7 @@ import {Mutation} from './Mutation.js';
 import {Game} from './Game.js';
 import {Review} from './Review.js';
 import {Subscription} from './Subscription.js';
+import {SelfClient} from './SelfClient.js';
 
 export const resolvers = {
   ...scalars,
@@ -18,4 +19,5 @@ export const resolvers = {
   ...Query,
   ...Mutation,
   ...Subscription,
+  ...SelfClient,
 };
