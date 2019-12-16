@@ -1,6 +1,6 @@
-import apollo from 'apollo-server-express';
+import {gql} from '../modules/apollo.js';
 
-export const Query = apollo.gql`
+export const Query = gql`
   type Query {
     trainers(rank: Rank, streamer: Boolean, game: ID, offset: Int, length: Int!): [Trainer]
     token(name: String, email: String!, code: String!): String @auth(required: false)

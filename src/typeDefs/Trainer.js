@@ -1,6 +1,6 @@
-import apollo from 'apollo-server-express';
+import {gql} from '../modules/apollo.js';
 
-export const Trainer = apollo.gql`
+export const Trainer = gql`
   type Trainer {
     id: ID!
     pic: String!

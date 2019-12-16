@@ -1,7 +1,7 @@
 import http from 'http';
 import {promises as fs} from 'fs';
 import express from 'express';
-import apollo from 'apollo-server-express';
+import {ApolloServer} from '../modules/apollo.js';
 import config from '../../config.json';
 import {fill} from '../temp.js';
 import {logger} from './logger.js';
@@ -43,7 +43,7 @@ function create() {
  */
 export async function listen(options) {
   const app = create();
-  const server = new apollo.ApolloServer(options);
+  const server = new ApolloServer(options);
 
   server.applyMiddleware({app, cors: config.apollo.cors, path: config.apollo.path});
 

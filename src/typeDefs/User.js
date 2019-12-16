@@ -1,6 +1,6 @@
-import apollo from 'apollo-server-express';
+import {gql} from '../modules/apollo.js';
 
-export const User = apollo.gql`
+export const User = gql`
   type User {
     id: ID!
     pic: String!

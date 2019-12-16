@@ -1,6 +1,6 @@
-import apollo from 'apollo-server-express';
+import {gql} from '../modules/apollo.js';
 
-export const SelfTrainer = apollo.gql`
+export const SelfTrainer = gql`
   type SelfTrainer {
     id: ID!
     pic: String!

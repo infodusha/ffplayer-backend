@@ -1,4 +1,4 @@
-import apollo from 'apollo-server-express';
+import * as apollo from '../modules/apollo.js';
 import errors from '../../errors.json';
 
 /**

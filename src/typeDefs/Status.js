@@ -1,6 +1,6 @@
-import apollo from 'apollo-server-express';
+import {gql} from '../modules/apollo.js';
 
-export const Status = apollo.gql`
+export const Status = gql`
   type Status {
     id: Int!
     online: Boolean!

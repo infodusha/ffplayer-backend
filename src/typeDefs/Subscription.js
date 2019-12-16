@@ -1,6 +1,6 @@
-import apollo from 'apollo-server-express';
+import {gql} from '../modules/apollo.js';
 
-export const Subscription = apollo.gql`
+export const Subscription = gql`
   type Subscription {
     changedStatus(ids: [Int]!): Status
   }
