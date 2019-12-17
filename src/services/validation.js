@@ -9,6 +9,9 @@ export function validate(callback) {
   try {
     callback(v8n);
   } catch (err) {
+    if (!err.rule) {
+      throw err;
+    }
     let message = `Validation '${err.rule.name}'`;
     if (err.rule.args.length) {
       message += `(${err.rule.args.join()})`;
