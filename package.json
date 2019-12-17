@@ -30,6 +30,7 @@
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
     "apollo-server-testing": "^2.9.14",
+    "babel-plugin-transform-default-import": "^1.0.0",
     "eslint": "^6.7.2",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.19.1",
@@ -73,7 +74,8 @@
           }
         }
       ]
-    ]
+    ],
+    "plugins": ["transform-default-import"]
   },
   "jest": {
     "coverageReporters": [

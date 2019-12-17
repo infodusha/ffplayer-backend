@@ -1,5 +1,4 @@
-import apolloM, * as apolloC from 'apollo-server-express';
-const apollo = apolloM || apolloC;
+import apollo from 'apollo-server-express';
 export const gql = apollo.gql;
 export const PubSub = apollo.PubSub;
 export const ApolloError = apollo.ApolloError;
