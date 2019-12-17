@@ -1,4 +1,5 @@
 import pg from 'pg';
+delete pg.native;
 
 const pool = new pg.Pool();
 
