@@ -3,7 +3,7 @@ import apollo from 'apollo-server-express';
 
 /**
  * Run validation
- * @param {function(validator)} callback
+ * @param {function(function)} callback
  */
 export function validate(callback) {
   try {
