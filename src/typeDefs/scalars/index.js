@@ -1,5 +1,5 @@
-import {gql} from '../../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const scalars = gql`
+export const scalars = apollo.gql`
   scalar Date
 `;

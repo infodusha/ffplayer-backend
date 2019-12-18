@@ -1,6 +1,6 @@
-import {gql} from '../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const Mutation = gql`
+export const Mutation = apollo.gql`
   type Mutation {
     "Send auth code"
     code(email: String!): Boolean @auth(required: false)

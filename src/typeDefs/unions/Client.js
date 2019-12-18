@@ -1,5 +1,5 @@
-import {gql} from '../../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const Client = gql`
+export const Client = apollo.gql`
    union Client = User | Trainer
 `;

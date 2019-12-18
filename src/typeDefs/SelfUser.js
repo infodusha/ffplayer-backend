@@ -1,6 +1,6 @@
-import {gql} from '../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const SelfUser = gql`
+export const SelfUser = apollo.gql`
   type SelfUser {
     id: ID!
     pic: String!

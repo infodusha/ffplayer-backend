@@ -1,11 +1,11 @@
-import {defaultFieldResolver} from '../modules/graphql.js';
-import {SchemaDirectiveVisitor} from '../modules/apollo.js';
+import graphql from 'graphql';
+import apollo from 'apollo-server-express';
 import {ApolloError} from '../services/error.js';
 
 /**
  * Protects data by auth
  */
-export class Auth extends SchemaDirectiveVisitor {
+export class Auth extends apollo.SchemaDirectiveVisitor {
   /**
    * Can be applyed on object
    * @param {any} type
@@ -39,7 +39,7 @@ export class Auth extends SchemaDirectiveVisitor {
 
     Object.keys(fields).forEach((fieldName) => {
       const field = fields[fieldName];
-      const {resolve = defaultFieldResolver} = field;
+      const {resolve = graphql.defaultFieldResolver} = field;
 
       field.resolve = function(...args) {
         let required = null;

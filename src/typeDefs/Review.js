@@ -1,6 +1,6 @@
-import {gql} from '../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const Review = gql`
+export const Review = apollo.gql`
   type Review {
     rate: Float
     title: String

@@ -1,6 +1,6 @@
-import {gql} from '../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const News = gql`
+export const News = apollo.gql`
   type News {
     id: ID!
     title: String!

@@ -1,6 +1,6 @@
-import {gql} from '../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const Game = gql`
+export const Game = apollo.gql`
   type GameSkill {
     name: String!
     pic: String!

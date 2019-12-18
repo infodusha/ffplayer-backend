@@ -1,5 +1,5 @@
 import {createTestClient} from 'apollo-server-testing';
-import {ApolloServer, gql} from '../src/modules/apollo.js';
+import apollo from 'apollo-server-express';
 import {resolvers} from '../src/resolvers/index.js';
 import {schemaDirectives} from '../src/schemaDirectives/index.js';
 import {typeDefs} from '../src/typeDefs/index.js';
@@ -15,7 +15,7 @@ describe('Server', () => {
 
     const context = () => ({user: {id: 1}, ip: '1.1.1.1'});
 
-    const server = new ApolloServer({
+    const server = new apollo.ApolloServer({
       typeDefs,
       resolvers,
       schemaDirectives,
@@ -27,7 +27,7 @@ describe('Server', () => {
   });
 
   it('Fetch news', async () => {
-    const NEWS_QUERY = gql`query($length: Int!) {
+    const NEWS_QUERY = apollo.gql`query($length: Int!) {
       news(length: $length) {
         id
         date

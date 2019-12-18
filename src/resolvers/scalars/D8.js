@@ -1,9 +1,9 @@
 
+import graphql from 'graphql';
 import language from 'graphql/language/index.js';
-import {GraphQLScalarType} from '../../modules/graphql.js';
 
 export const D8 = {
-  Date: new GraphQLScalarType({
+  Date: new graphql.GraphQLScalarType({
     name: 'Date',
     description: 'Date scalar type',
     parseValue(value) {

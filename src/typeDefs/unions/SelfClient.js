@@ -1,5 +1,5 @@
-import {gql} from '../../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const SelfClient = gql`
+export const SelfClient = apollo.gql`
    union SelfClient = SelfUser | SelfTrainer
 `;

@@ -1,6 +1,6 @@
-import {PubSub} from '../modules/apollo.js';
+import apollo from 'apollo-server-express';
 export const CHANGED_STATUS = 'CHANGED_STATUS';
-export const statusPubSub = new PubSub();
+export const statusPubSub = new apollo.PubSub();
 const online = new Map();
 
 /**

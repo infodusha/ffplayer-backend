@@ -1,6 +1,6 @@
-import {gql} from '../../modules/apollo.js';
+import apollo from 'apollo-server-express';
 
-export const Rank = gql`
+export const Rank = apollo.gql`
   enum Rank {
     TOP
     EXPERT
