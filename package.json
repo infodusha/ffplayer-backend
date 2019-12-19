@@ -27,8 +27,8 @@
     "url": "https://github.com/infodusha/ffplayer-backend/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "apollo-server-testing": "^2.9.14",
     "babel-plugin-transform-default-import": "^1.0.0",
     "eslint": "^6.7.2",
@@ -48,7 +48,7 @@
     "graphql-validation-complexity": "^0.2.5",
     "jsonwebtoken": "^8.5.1",
     "nodemailer": "^6.4.2",
-    "pg": "^7.15.0",
+    "pg": "^7.15.1",
     "uuid": "^3.3.3",
     "v8n": "^1.3.3",
     "winston": "^3.2.1"
@@ -75,7 +75,9 @@
         }
       ]
     ],
-    "plugins": ["transform-default-import"]
+    "plugins": [
+      "transform-default-import"
+    ]
   },
   "jest": {
     "coverageReporters": [
