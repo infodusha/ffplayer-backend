@@ -27,14 +27,14 @@
     "url": "https://github.com/infodusha/ffplayer-backend/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
     "apollo-server-testing": "^2.9.16",
     "babel-plugin-transform-default-import": "^1.0.0",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-jest": "^23.4.0",
+    "eslint-plugin-jest": "^23.6.0",
     "jest": "^24.9.0",
     "nodemon": "^2.0.2",
     "pm2": "^4.2.1"
